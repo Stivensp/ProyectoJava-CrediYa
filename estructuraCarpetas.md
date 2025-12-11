@@ -12,8 +12,8 @@ crediya/
     │   │       │   ├── Prestamo.java
     │   │       │   └── Pago.java
     │   │       │
-    │   │       ├── dao/
-    │   │       │   ├── interfaces/
+    │   │       ├── dao/ 
+    │   │       │   ├── interfaces// 
     │   │       │   │   ├── EmpleadoDAO.java
     │   │       │   │   ├── ClienteDAO.java
     │   │       │   │   ├── PrestamoDAO.java
@@ -43,9 +43,9 @@ crediya/
     │   │
     │   └── resources/
     │       ├── data/
-    │       │   ├── empleados.txt
-    │       │   ├── clientes.txt
-    │       │   ├── prestamos.txt
+    │       │   ├── 
+    │       │   ├── 
+    │       │   ├── 
     │       │   └── pagos.txt
     │       └── sql/
     │           └── crediya_schema.sql
