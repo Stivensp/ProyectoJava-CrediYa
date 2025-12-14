@@ -13,13 +13,14 @@ public class MenuTecnicoView extends MenuBaseView {
         do{
             System.out.println("""            
                 
-                                                                                                                                                          
-         ▄▄▄▄▄▄▄▄▄                                
-         ▀▀▀███▀▀▀                ▀▀              
-            ███ ▄█▀█▄ ▄████ ████▄ ██  ▄████ ▄███▄ 
-            ███ ██▄█▀ ██    ██ ██ ██  ██    ██ ██ 
-            ███ ▀█▄▄▄ ▀████ ██ ██ ██▄ ▀████ ▀███▀ 
-                                                                                                                      
+                  
+                
+            ▄▄▄▄▄▄▄▄▄                                
+            ▀▀▀███▀▀▀                ▀▀              
+               ███ ▄█▀█▄ ▄████ ████▄ ██  ▄████ ▄███▄ 
+               ███ ██▄█▀ ██    ██ ██ ██  ██    ██ ██ 
+               ███ ▀█▄▄▄ ▀████ ██ ██ ██▄ ▀████ ▀███▀ 
+                                                                                                                        
              1. Ver archivos TXT
              2. Borrar datos TXT
              3. Probar conexión MySQL

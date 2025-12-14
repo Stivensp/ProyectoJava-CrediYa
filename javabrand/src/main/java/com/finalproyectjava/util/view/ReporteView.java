@@ -14,8 +14,7 @@ public class ReporteView extends MenuBaseView {
             System.out.println("""            
                 
                 
-                                                     
-                                              
+                                                                                        
             ▄▄▄▄▄▄▄                                       
             ███▀▀███▄                          ██         
             ███▄▄███▀ ▄█▀█▄ ████▄ ▄███▄ ████▄ ▀██▀▀ ▄█▀█▄ 
