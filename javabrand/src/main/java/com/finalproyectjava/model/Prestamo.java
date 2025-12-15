@@ -1,39 +1,47 @@
 package com.finalproyectjava.model;
 
+import java.time.LocalDate;
+
 public class Prestamo {
     //Atributos
     private int id;
-    private int cliente_id;
-    private int empleado_id;
+    private int clienteId;
+    private int empleadoId;
     private double monto;
     private double interes;
     private int cuotas;
-    private String fecha_inicio;
-    private String estado;
+    private LocalDate fechaInicio;
+    private EstadoPrestamo estado;
+    private double valorCuota;
 
+    //Enum
+    public enum EstadoPrestamo {
+        PENDIENTE,
+        PAGADO
+    }
     //Constructor
-    public Prestamo (int id, int cliente_id, int empleado_id, double monto, double interes, int cuotas, String fecha_inicio, String estado){
+    public Prestamo (int id, int clienteId, int empleadoId, double monto, double interes, int cuotas, LocalDate fechaInicio, EstadoPrestamo estado, Double valorCuota){
         
         this.id = id;
-        this.cliente_id = cliente_id;
-        this.empleado_id = empleado_id;
+        this.clienteId = clienteId;
+        this.empleadoId = empleadoId;
         this.monto = monto;
         this.interes = interes;
         this.cuotas = cuotas;
-        this.fecha_inicio = fecha_inicio;
+        this.fechaInicio = fechaInicio;
         this.estado = estado;
-
+        this.valorCuota = valorCuota;
     }
 
     //Setters
     public void setId(int id){
         this.id = id;
     }
-    public void setCliente_id (int cliente_id ){
-        this.cliente_id  = cliente_id ;
+    public void setClienteId (int clienteId ){
+        this.clienteId  = clienteId ;
     }
-    public void setEmpleado_id(int empleado_id){
-        this.empleado_id = empleado_id;
+    public void setEmpleadoId(int empleadoId){
+        this.empleadoId = empleadoId;
     }
     public void setMonto(double monto){
         this.monto = monto;
@@ -44,50 +52,55 @@ public class Prestamo {
     public void setCuotas(int cuotas){
         this.cuotas = cuotas;
     }
-    public void setFecha_inicio(String fecha_inicio){
-        this.fecha_inicio = fecha_inicio;
+    public void setFechaInicio(LocalDate fechaInicio){
+        this.fechaInicio = fechaInicio;
     }
-    public void setEstado(String estado){
+    public void setEstado(EstadoPrestamo estado){
         this.estado = estado;
+    }
+    public void setValorCuota(Double valorCuota){
+        this.valorCuota = valorCuota;
     }
 
     //Getters
-    public int getId(int id){
-        return this.id = id;
+    public int getId(){
+        return id;
     }
-    public int getCliente_id (int cliente_id ){
-        return this.cliente_id  = cliente_id ;
+    public int getClienteId (){
+        return clienteId ;
     }
-    public int getEmpleado_id(int empleado_id){
-        return this.empleado_id = empleado_id;
+    public int getEmpleadoId(){
+        return empleadoId;
     }
-    public double getMonto(double monto){
-        return this.monto = monto;
+    public double getMonto(){
+        return monto;
     }
-    public double getInteres(double interes){
-        return this.interes = interes;
+    public double getInteres(){
+        return interes;
     }
-    public int getCuotas(int cuotas){
-        return this.cuotas = cuotas;
+    public int getCuotas(){
+        return cuotas;
     }
-    public String getFecha_inicio(String fecha_inicio){
-        return this.fecha_inicio = fecha_inicio;
+    public LocalDate getFechaInicio(){
+        return fechaInicio;
     }
-    public String getEstado(String estado){
-        return this.estado = estado;
+    public EstadoPrestamo getEstado(){
+        return estado;
     }
-
+    public Double getValorCuota(){
+        return valorCuota;
+    }
     //toString
     @Override
     public String toString(){
         return 
         "id " + id +
-        " Cliente id "+ cliente_id +
-        " Empleado id " + empleado_id +
+        " Cliente id "+ clienteId +
+        " Empleado id " + empleadoId +
         " Monto " + monto +
         " Interes " + interes +
         " Cuotas " + cuotas +
-        " Fecha inicio " + fecha_inicio +
+        " Fecha inicio " + fechaInicio +
         " Estado " + estado
         ;
     }

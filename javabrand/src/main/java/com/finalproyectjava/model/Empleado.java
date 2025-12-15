@@ -19,11 +19,11 @@ public class Empleado extends Persona {
         this.salario = salario;
     }
     //Getters
-    public String getRol(String rol){
-        return this.rol;
+    public String getRol(){
+        return rol;
     }
-    public Double getSalario(Double salario){
-        return this.salario;
+    public Double getSalario(){
+        return salario;
     }
     
     //toString

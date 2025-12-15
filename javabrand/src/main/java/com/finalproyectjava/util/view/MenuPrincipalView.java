@@ -1,12 +1,41 @@
 package com.finalproyectjava.util.view;
 
+import com.finalproyectjava.service.ClienteService;
+import com.finalproyectjava.service.EmpleadoService;
+import com.finalproyectjava.service.PagoService;
+import com.finalproyectjava.service.PrestamoService;
+import com.finalproyectjava.service.ReporteService;
+
 public class MenuPrincipalView extends MenuBaseView {
-    //Atributos
-    private final EmpleadoView ev = new EmpleadoView();
-    private final ClienteView cv = new ClienteView();
-    //Constructor vacio
-    public MenuPrincipalView(){
-        //Vacio
+    //Atributos Service
+    private final EmpleadoService empleadoService;
+    private final ClienteService clienteService;
+    private final PrestamoService prestamoService;
+    private final PagoService pagoService;
+    private final ReporteService reporteService;
+    
+    //Atributos View
+    private final ReporteView rv;
+    private final EmpleadoView ev;
+    private final ClienteView cv;
+    private final PrestamoView pv;
+    private final PagoView pagoS;
+
+    //Contructor
+    public MenuPrincipalView() {
+        //Service
+        prestamoService = new PrestamoService();
+        clienteService = new ClienteService(prestamoService);
+        empleadoService = new EmpleadoService();
+        pagoService = new PagoService();
+        reporteService = new ReporteService(prestamoService, pagoService, clienteService, empleadoService);
+        
+        //View
+        rv = new ReporteView(reporteService);
+        ev = new EmpleadoView(empleadoService);
+        cv = new ClienteView(clienteService, prestamoService);
+        pv = new PrestamoView(prestamoService, clienteService, empleadoService);
+        pagoS = new PagoView(pagoService, prestamoService);
     }
     //Base del menu
     @Override
@@ -49,32 +78,31 @@ public class MenuPrincipalView extends MenuBaseView {
             }
 
             switch (opcion) {
-                case 1:
+                case 1 -> {
                     limpiarConsola();
                     ev.play();
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     limpiarConsola();
                     cv.play();
-                    break;
-                case 3:
+                }
+                case 3 -> {
+                    limpiarConsola();
+                    pv.play();
+                }
+                case 4 ->{
+                    limpiarConsola();
+                    pagoS.play();                    
+                }
+                case 5 ->{
                     limpiarConsola();                    
-                    break;
-                case 4:
-                    limpiarConsola();                    
-                    break;
-                case 5:
-                    limpiarConsola();                    
-                    break;
-                case 6:
-                    limpiarConsola();                    
-                    break;
-                case 0:
-                    limpiarConsola();                    
-                    break;
+                    rv.play();
+                }
+                case 6 -> limpiarConsola();
+                case 0 -> limpiarConsola();
             
-                default: 
-                    break;
+                default -> {
+                }
             }
         } while(opcion != 0);
     }

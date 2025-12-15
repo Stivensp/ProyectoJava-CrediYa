@@ -16,7 +16,7 @@ public class Cliente extends Persona {
     }
     //Getters
     public String getTelefono(){
-        return this.telefono;
+        return telefono;
     }
     
     //toString
