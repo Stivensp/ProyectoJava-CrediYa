@@ -12,7 +12,7 @@ public class Prestamo {
     private int cuotas;
     private LocalDate fechaInicio;
     private EstadoPrestamo estado;
-
+    private double valorCuota;
 
     //Enum
     public enum EstadoPrestamo {
@@ -20,7 +20,7 @@ public class Prestamo {
         PAGADO
     }
     //Constructor
-    public Prestamo (int id, int clienteId, int empleadoId, double monto, double interes, int cuotas, LocalDate fechaInicio, EstadoPrestamo estado){
+    public Prestamo (int id, int clienteId, int empleadoId, double monto, double interes, int cuotas, LocalDate fechaInicio, EstadoPrestamo estado, Double valorCuota){
         
         this.id = id;
         this.clienteId = clienteId;
@@ -30,7 +30,7 @@ public class Prestamo {
         this.cuotas = cuotas;
         this.fechaInicio = fechaInicio;
         this.estado = estado;
-
+        this.valorCuota = valorCuota;
     }
 
     //Setters
@@ -58,6 +58,9 @@ public class Prestamo {
     public void setEstado(EstadoPrestamo estado){
         this.estado = estado;
     }
+    public void setValorCuota(Double valorCuota){
+        this.valorCuota = valorCuota;
+    }
 
     //Getters
     public int getId(){
@@ -84,7 +87,9 @@ public class Prestamo {
     public EstadoPrestamo getEstado(){
         return estado;
     }
-
+    public Double getValorCuota(){
+        return valorCuota;
+    }
     //toString
     @Override
     public String toString(){

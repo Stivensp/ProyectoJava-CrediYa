@@ -1,14 +1,21 @@
 package com.finalproyectjava.util.view;
 
 import com.finalproyectjava.model.Cliente;
+import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.service.ClienteService;
+import com.finalproyectjava.service.PrestamoService;
 
 public class ClienteView extends MenuBaseView {
+
     private final ClienteService cs;
-    //Constructor Vacio
-    public ClienteView(){
-        this.cs = new ClienteService();
+   // private final PrestamoService ps;
+
+    //Constructor 
+    public ClienteView(ClienteService cs, PrestamoService ps){
+        this.cs = cs;
+    // this.ps = ps;
     }
+
     //Base del menu
     @Override
     public void play(){
@@ -34,7 +41,7 @@ public class ClienteView extends MenuBaseView {
              6. Mostrar préstamos del cliente
              7. Guardar cliente en BD (MySQL)
              8. Listar clientes desde BD
-             0. Salir
+             0. Volver
              Seleccione una opcion:   
             """
             );
@@ -47,7 +54,7 @@ public class ClienteView extends MenuBaseView {
             opcion = consola.nextInt();
 
             if(opcion < 0 || opcion > 8 ){
-                System.out.println("Opción fuera de rango");
+                System.out.println("Opcin fuera de rango");
                 continue;
             }
 
@@ -134,7 +141,18 @@ public class ClienteView extends MenuBaseView {
     }
     // Mostrar préstamos del cliente
     public void prestamosClienteView(){
-        System.out.println("No existe este metodo aun");
+        System.out.println("Buscador de ID");
+        int clienteId = consola.nextInt();
+
+        if(!cs.prestamosCliente(clienteId).isEmpty()){
+            for(Prestamo p : cs.prestamosCliente(clienteId)){
+                System.out.println(p);
+                System.out.println("Prestamos encontrados");
+            }
+        }else{
+            System.out.println("Clientes no encontrados");
+        }
+
     }
 
 }

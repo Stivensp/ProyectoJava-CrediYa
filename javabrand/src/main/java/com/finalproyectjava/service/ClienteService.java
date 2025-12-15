@@ -10,7 +10,12 @@ public class ClienteService {
     //Atributos
     private final List<Cliente> clientes = new ArrayList<>();
     private int countIds = 1;
-    private final PrestamoService ps = new PrestamoService();
+    private final PrestamoService ps;
+
+    //Constructor
+    public ClienteService(PrestamoService ps){
+        this.ps = ps;
+    }
 
     //Metodo Registrar
     public Cliente registrarCliente(String nombre, String documento, String correo, String telefono){

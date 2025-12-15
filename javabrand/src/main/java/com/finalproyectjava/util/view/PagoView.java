@@ -4,13 +4,16 @@ import java.time.LocalDate;
 
 import com.finalproyectjava.model.Pago;
 import com.finalproyectjava.service.PagoService;
+import com.finalproyectjava.service.PrestamoService;
 
 
 public class PagoView extends MenuBaseView{
     private final PagoService pagoS;
+    //private final PrestamoService ps;
     //Constructor vacio
-    public PagoView(){
-        this.pagoS = new PagoService();
+    public PagoView(PagoService pagosS, PrestamoService ps){
+        this.pagoS = pagosS;
+        //this.ps =  ps;
     }
     //Base del menu
     @Override

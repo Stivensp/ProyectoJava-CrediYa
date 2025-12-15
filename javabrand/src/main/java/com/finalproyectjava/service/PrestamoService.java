@@ -8,52 +8,69 @@ import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.model.Prestamo.EstadoPrestamo;
 
 public class PrestamoService {
-    //Atributos
+
     private final List<Prestamo> prestamos = new ArrayList<>();
     private int countIds = 1;
 
-    //Agregar prestamo
-    public Prestamo agregarPrestamo(int clienteId, int empleadoId, double monto, double interes, int cuotas, LocalDate fechaInicio, EstadoPrestamo estado){
+    // Agregar préstamo
+    public Prestamo agregarPrestamo(int clienteId,int empleadoId, double monto, double interes, int cuotas, LocalDate fechaInicio) {
+
+        double valorCuota = calcularValorCuota(monto, interes, cuotas);
         Prestamo p = new Prestamo(
-            countIds++,
-            clienteId,
-            empleadoId,
-            monto,
-            interes,
-            cuotas,
-            fechaInicio,
-            estado
+                countIds++,
+                clienteId,
+                empleadoId,
+                monto,
+                interes,
+                cuotas,
+                fechaInicio,
+                EstadoPrestamo.PENDIENTE,
+                valorCuota
         );
+
         prestamos.add(p);
         return p;
     }
-    //Lista de todos los prestamos
-    public List<Prestamo> listaPrestamo(){
+
+    public List<Prestamo> listaPrestamo() {
         return prestamos;
     }
-    //Buscar prestamo por id
-    public Prestamo buscarPrestamoId(int id){
-        for(Prestamo p : prestamos){
-            if(p.getId() == id){
+
+    public Prestamo buscarPrestamoId(int id) {
+        for (Prestamo p : prestamos) {
+            if (p.getId() == id) {
                 return p;
             }
         }
         return null;
     }
-    //Cambiar estado por id
-    public boolean cambiarEstadoPrestamo(int id, EstadoPrestamo estado){
-        Prestamo findOut = buscarPrestamoId(id);
 
-        if(findOut != null){
-            if(findOut.getEstado() != estado){
-                findOut.setEstado(estado);                
-                return true;
-            }
+    public boolean cambiarEstadoPrestamo(int id, EstadoPrestamo estado) {
+        Prestamo p = buscarPrestamoId(id);
+        if (p != null && p.getEstado() != estado) {
+            p.setEstado(estado);
+            return true;
         }
         return false;
     }
-    //Recalcular cuotas
-    public void recalcularCuotas(){
-        System.out.println("No esta este metodo aun");
+
+    private double calcularValorCuota(double monto, double interes, int cuotas) {
+        if (cuotas <= 0) {
+            throw new IllegalArgumentException("Las cuotas deben ser mayores a 0");
+        }
+
+        double total = monto + (monto * interes / 100);
+        return total / cuotas;
+    }
+
+    // Recalcular cuotas
+    public void recalcularCuotas(Prestamo prestamo) {
+        double nuevaCuota = calcularValorCuota(
+                prestamo.getMonto(),
+                prestamo.getInteres(),
+                prestamo.getCuotas()
+        );
+        prestamo.setValorCuota(nuevaCuota);
     }
 }
+

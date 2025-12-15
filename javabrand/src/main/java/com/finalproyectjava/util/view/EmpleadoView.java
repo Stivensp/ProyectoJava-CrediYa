@@ -6,8 +6,8 @@ import com.finalproyectjava.service.EmpleadoService;
 public class EmpleadoView extends MenuBaseView {
     private final EmpleadoService e;
     //Constructor vacio
-    public EmpleadoView(){
-        this.e = new EmpleadoService();
+    public EmpleadoView(EmpleadoService e){
+        this.e = e;
     }
     //Base del menu
     @Override

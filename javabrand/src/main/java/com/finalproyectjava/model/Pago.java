@@ -32,13 +32,13 @@ public class Pago {
     public int getId (){
         return id;
     }
-    public int getprestamoId(){
+    public int getPrestamoId(){
        return  prestamoId;
     }
     public LocalDate getfechaPago (){
         return fechaPago;
     }
-    public double getmonto(){
+    public double getMonto(){
        return monto;
     }
 
@@ -53,5 +53,7 @@ public class Pago {
         " monto " + monto
         ;
     }
+
+
 
 }

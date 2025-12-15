@@ -1,18 +1,26 @@
 package com.finalproyectjava.util.view;
 
-public class ReporteView extends MenuBaseView {   
-     //Constructor vacio
-    public ReporteView(){
-    //Vacio
-    }
-    //Base del menu
-    @Override
-    public void play(){    
-        int opcion = 0;
+import java.util.List;
+import java.util.Map;
 
-        do{
-            System.out.println("""            
-                
+import com.finalproyectjava.model.Cliente;
+import com.finalproyectjava.model.Empleado;
+import com.finalproyectjava.model.Prestamo;
+import com.finalproyectjava.service.ReporteService;
+
+public class ReporteView extends MenuBaseView {
+    private final ReporteService rs;
+
+    public ReporteView(ReporteService rs) {
+        this.rs = rs;
+    }
+
+    @Override
+    public void play() {
+        int opcion = -1;
+
+        do {
+            System.out.println("""
                 
                                                                                         
             ▄▄▄▄▄▄▄                                       
@@ -30,32 +38,64 @@ public class ReporteView extends MenuBaseView {
              6. Total recaudado por pagos
              0. Volver
              Seleccione una opcion:   
-            """
-            );
+            """);
 
-            if (!consola.hasNextInt()){
-                System.out.println("Debe ingresar un numero");
+            if (!consola.hasNextInt()) {
+                System.out.println("Debe ingresar un número.");
+                consola.nextLine();
                 continue;
             }
 
             opcion = consola.nextInt();
+            consola.nextLine(); 
 
-            if(opcion < 0 || opcion > 6 ){
-                System.out.println("Opción fuera de rango");
-                continue;
-            }
+            limpiarConsola();
 
             switch (opcion) {
-                case 1 -> limpiarConsola();
-                case 2 -> limpiarConsola();
-                case 3 -> limpiarConsola();
-                case 4 -> limpiarConsola();
-                case 5 -> limpiarConsola();
-                case 0 -> limpiarConsola();
-            
-                default -> {
-                }
+                case 1 -> mostrarPrestamos(rs.prestamosActivos(), "Préstamos Activos");
+                case 2 -> mostrarPrestamos(rs.prestamosPagados(), "Préstamos Pagados");
+                case 3 -> mostrarPrestamos(rs.prestamosVencidos(), "Préstamos Vencidos");
+                case 4 -> mostrarClientesMorosos(rs.clientesMorosos());
+                case 5 -> mostrarEmpleados(rs.empleadosConMasPrestamos());
+                case 6 -> System.out.println("Total recaudado: $" + rs.totalRecaudado());
+                case 0 -> System.out.println("Volviendo");
+                default -> System.out.println("Opción fuera de rango.");
             }
-        } while(opcion != 0);
-    }    
+
+        } while (opcion != 0);
+    }
+
+    private void mostrarPrestamos(List<Prestamo> prestamos, String titulo) {
+        System.out.println( titulo );
+        if (prestamos.isEmpty()) {
+            System.out.println("No hay registros");
+            return;
+        }
+        for (Prestamo p : prestamos) {
+            System.out.println(p);
+        }
+    }
+
+    private void mostrarClientesMorosos(List<Cliente> clientes) {
+        System.out.println("Clientes Morosos");
+        if (clientes.isEmpty()) {
+            System.out.println("No hay clientes morosos.");
+            return;
+        }
+        for (Cliente c : clientes) {
+            System.out.println(c);
+        }
+    }
+
+    private void mostrarEmpleados(Map<Empleado, Long> empleados) {
+        System.out.println("Empleados con más préstamos otorgados");
+        if (empleados.isEmpty()) {
+            System.out.println("No hay registros ");
+            return;
+        }
+        empleados.entrySet()
+                .stream()
+                .sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue()))
+                .forEach(e -> System.out.println(e.getKey() + " -> " + e.getValue() + " préstamos"));
+    }
 }

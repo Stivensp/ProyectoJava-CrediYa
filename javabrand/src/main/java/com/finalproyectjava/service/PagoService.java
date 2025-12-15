@@ -32,7 +32,7 @@ public class PagoService {
         List<Pago> listPresPago = new ArrayList<>();
 
         for(Pago p : pagos){
-            if(p.getprestamoId() == prestamoId){
+            if(p.getPrestamoId() == prestamoId){
                 listPresPago.add(p);
             }
         }
