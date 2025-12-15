@@ -4,6 +4,8 @@ public class MenuPrincipalView extends MenuBaseView {
     //Atributos
     private final EmpleadoView ev = new EmpleadoView();
     private final ClienteView cv = new ClienteView();
+    private final PrestamoView pv = new PrestamoView();
+    private final PagoView pagoS = new PagoView();
     //Constructor vacio
     public MenuPrincipalView(){
         //Vacio
@@ -49,32 +51,28 @@ public class MenuPrincipalView extends MenuBaseView {
             }
 
             switch (opcion) {
-                case 1:
+                case 1 -> {
                     limpiarConsola();
                     ev.play();
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     limpiarConsola();
                     cv.play();
-                    break;
-                case 3:
-                    limpiarConsola();                    
-                    break;
-                case 4:
-                    limpiarConsola();                    
-                    break;
-                case 5:
-                    limpiarConsola();                    
-                    break;
-                case 6:
-                    limpiarConsola();                    
-                    break;
-                case 0:
-                    limpiarConsola();                    
-                    break;
+                }
+                case 3 -> {
+                    limpiarConsola();
+                    pv.play();
+                }
+                case 4 ->{
+                    limpiarConsola();
+                    pagoS.play();                    
+                }
+                case 5 -> limpiarConsola();
+                case 6 -> limpiarConsola();
+                case 0 -> limpiarConsola();
             
-                default: 
-                    break;
+                default -> {
+                }
             }
         } while(opcion != 0);
     }

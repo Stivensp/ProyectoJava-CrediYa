@@ -42,27 +42,15 @@ public class MenuTecnicoView extends MenuBaseView {
             }
 
             switch (opcion) {
-                case 1:
-                    limpiarConsola();
-                    break;
-                case 2:
-                    limpiarConsola();
-                    break;
-                case 3:
-                    limpiarConsola();                    
-                    break;
-                case 4:
-                    limpiarConsola();                    
-                    break;
-                case 5:
-                    limpiarConsola();                    
-                    break;
-                case 0:
-                    limpiarConsola();                    
-                    break;
+                case 1 -> limpiarConsola();
+                case 2 -> limpiarConsola();
+                case 3 -> limpiarConsola();
+                case 4 -> limpiarConsola();
+                case 5 -> limpiarConsola();
+                case 0 -> limpiarConsola();
             
-                default: 
-                    break;
+                default -> {
+                }
             }
         } while(opcion != 0);
     }        

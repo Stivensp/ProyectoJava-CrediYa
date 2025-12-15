@@ -1,9 +1,13 @@
 package com.finalproyectjava.util.view;
 
+import com.finalproyectjava.model.Cliente;
+import com.finalproyectjava.service.ClienteService;
+
 public class ClienteView extends MenuBaseView {
+    private final ClienteService cs;
     //Constructor Vacio
     public ClienteView(){
-    //Vacio
+        this.cs = new ClienteService();
     }
     //Base del menu
     @Override
@@ -42,37 +46,95 @@ public class ClienteView extends MenuBaseView {
 
             opcion = consola.nextInt();
 
-            if(opcion < 0 || opcion > 6 ){
+            if(opcion < 0 || opcion > 8 ){
                 System.out.println("Opción fuera de rango");
                 continue;
             }
 
             switch (opcion) {
-                case 1:
-                    limpiarConsola();
-                    break;
-                case 2:
-                    limpiarConsola();
-                    break;
-                case 3:
-                    limpiarConsola();                    
-                    break;
-                case 4:
-                    limpiarConsola();                    
-                    break;
-                case 5:
-                    limpiarConsola();                    
-                    break;
-                case 6:
-                    limpiarConsola();                    
-                    break;
-                case 0:
-                    limpiarConsola();                    
-                    break;
+                case 1 -> registrarClienteView();
+                case 2 -> listaClientesView();
+                case 3 -> buscaIdClienteView();
+                case 4 -> actualizarClienteView();
+                case 5 -> eliminarClienteIdView();
+                case 6 -> prestamosClienteView();
+                case 7 -> limpiarConsola();
+                case 8 -> limpiarConsola();
+                case 0 -> limpiarConsola();
             
-                default: 
-                    break;
+                default -> {
+                }
             }
         } while(opcion != 0);
     }    
+    //Metodos de registro
+    public void registrarClienteView(){
+        System.out.println("Nombre ");
+        String nombre = consola.next();
+
+        System.out.println("Documento ");
+        String documento = consola.next();
+
+        System.out.println("Correo ");
+        String correo = consola.next();
+
+        System.out.println("Telefono" );
+        String telefono = consola.next();
+        cs.registrarCliente(nombre, documento, correo, telefono);        
+    }
+    //Metodo de lista de todos los clientes
+    public void listaClientesView(){
+        for(Cliente c : cs.listaClientes()){
+            System.out.println(c);
+        }
+    }
+    //Metodo buscar por id
+    public void buscaIdClienteView(){
+        System.out.println("Buscador de ID ");
+        int findId = consola.nextInt();
+        
+        Cliente c = cs.buscarClienteId(findId);
+
+        if(c != null){
+            System.out.println(c);
+            System.out.println("Cliente encontrado");
+        }else {
+            System.out.println("Cliente no encontrado");
+        }
+    }
+    //Metodo actualizar por id
+    public void actualizarClienteView(){
+        System.out.println("Buscador de ID ");
+        int findId = consola.nextInt();
+
+        System.out.println("Nombre ");
+        String nombre = consola.next();
+
+        System.out.println("Documento ");
+        String documento = consola.next();
+
+        System.out.println("Correo ");
+        String correo = consola.next();
+
+        System.out.println("Telefono" );
+        String telefono = consola.next();
+        cs.actualizarCliente(findId, nombre, documento, correo, telefono);        
+    }
+    //Metodo eliminar por id
+    public void eliminarClienteIdView(){
+        System.out.println("Buscador de ID ");
+        int findId = consola.nextInt();
+        
+        boolean bol = cs.eliminarCliente(findId);
+        if(bol == true){
+            System.out.println("Cliente eliminado");
+        } else {
+            System.out.println("Cliente no encontrado");
+        }
+    }
+    // Mostrar préstamos del cliente
+    public void prestamosClienteView(){
+        System.out.println("No existe este metodo aun");
+    }
+
 }

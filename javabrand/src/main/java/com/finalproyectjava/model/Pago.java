@@ -1,43 +1,45 @@
 package com.finalproyectjava.model;
 
+import java.time.LocalDate;
+
 public class Pago {
     //Atributos
     private int id;
-    private int prestamo_id;
-    private String fecha_pago;
+    private int prestamoId;
+    private LocalDate fechaPago;
     private double monto;
     //Constructor
-    public Pago (int id, int prestamo_id, String fecha_pago, double monto){
+    public Pago (int id, int prestamoId, LocalDate fechaPago, double monto){
         this.id = id;
-        this.prestamo_id = prestamo_id;
-        this.fecha_pago = fecha_pago;
+        this.prestamoId = prestamoId;
+        this.fechaPago = fechaPago;
         this.monto = monto;
     }
     //Setters
     public void setId (int id){
         this.id = id;
     }
-    public void setprestamo_id(int prestamo_id){
-        this.prestamo_id = prestamo_id;
+    public void setprestamoId(int prestamoId){
+        this.prestamoId = prestamoId;
     }
-    public void setfecha_pago (String fecha_pago){
-        this.fecha_pago = fecha_pago;
+    public void setfechaPago (LocalDate fechaPago){
+        this.fechaPago = fechaPago;
     }
     public void setmonto(double monto){
         this.monto = monto;
     }
     //Getters
-    public int getId (int id){
-        return this.id = id;
+    public int getId (){
+        return id;
     }
-    public int getprestamo_id(int prestamo_id){
-       return this.prestamo_id = prestamo_id;
+    public int getprestamoId(){
+       return  prestamoId;
     }
-    public String getfecha_pago (String fecha_pago){
-        return this.fecha_pago = fecha_pago;
+    public LocalDate getfechaPago (){
+        return fechaPago;
     }
-    public double getmonto(double monto){
-       return this.monto = monto;
+    public double getmonto(){
+       return monto;
     }
 
     //ToString
@@ -46,8 +48,8 @@ public class Pago {
     public String toString(){
         return 
         " id " + id +
-        " prestamo id " + prestamo_id +
-        " fecha pago " + fecha_pago +
+        " prestamo id " + prestamoId +
+        " fecha pago " + fechaPago +
         " monto " + monto
         ;
     }

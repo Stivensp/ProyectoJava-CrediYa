@@ -34,16 +34,16 @@ public class Persona {
     }
     //Getters
     public int getId(){
-        return this.id;
+        return id;
     }
     public String getNombre(){
-        return this.nombre;
+        return nombre;
     }
     public String getDocumento(){
-        return this.documento;
+        return documento;
     }
     public String getCorreo(){
-        return this.correo;
+        return correo;
     }
 
     //toString
