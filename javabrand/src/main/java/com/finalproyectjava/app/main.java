@@ -1,5 +1,10 @@
 package com.finalproyectjava.app;
 
-public class main {
-    
+import com.finalproyectjava.util.view.MenuPrincipalView;
+
+public class Main {
+    public static void main(String[] args) {
+        MenuPrincipalView mpv = new MenuPrincipalView();
+        mpv.play();
+    }
 }
