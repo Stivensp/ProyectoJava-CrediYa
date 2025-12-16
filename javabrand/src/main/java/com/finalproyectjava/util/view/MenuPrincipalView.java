@@ -1,5 +1,15 @@
 package com.finalproyectjava.util.view;
 
+import com.finalproyectjava.dao.impl.ClienteDAOImpl;
+import com.finalproyectjava.dao.impl.EmpleadoDAOImpl;
+import com.finalproyectjava.dao.impl.PagoDAOImpl;
+import com.finalproyectjava.dao.impl.PagoDualDAOImpl;
+import com.finalproyectjava.dao.impl.PagoTxtDAOImpl;
+import com.finalproyectjava.dao.impl.PrestamoDAOImpl;
+import com.finalproyectjava.dao.interfaces.ClienteDAO;
+import com.finalproyectjava.dao.interfaces.EmpleadoDAO;
+import com.finalproyectjava.dao.interfaces.PagoDAO;
+import com.finalproyectjava.dao.interfaces.PrestamoDAO;
 import com.finalproyectjava.service.ClienteService;
 import com.finalproyectjava.service.EmpleadoService;
 import com.finalproyectjava.service.PagoService;
@@ -7,6 +17,16 @@ import com.finalproyectjava.service.PrestamoService;
 import com.finalproyectjava.service.ReporteService;
 
 public class MenuPrincipalView extends MenuBaseView {
+    //Dao
+    ClienteDAO clienteDAO = new ClienteDAOImpl();
+    EmpleadoDAO empleadoDAO = new EmpleadoDAOImpl();
+    PrestamoDAO prestamoDAO = new PrestamoDAOImpl();
+    
+    PagoDAO pagoDAO = new PagoDualDAOImpl(
+            new PagoDAOImpl(),
+            new PagoTxtDAOImpl()
+    );
+    
     //Atributos Service
     private final EmpleadoService empleadoService;
     private final ClienteService clienteService;
@@ -24,10 +44,10 @@ public class MenuPrincipalView extends MenuBaseView {
     //Contructor
     public MenuPrincipalView() {
         //Service
-        prestamoService = new PrestamoService();
-        clienteService = new ClienteService(prestamoService);
-        empleadoService = new EmpleadoService();
-        pagoService = new PagoService();
+        prestamoService = new PrestamoService(prestamoDAO);
+        clienteService = new ClienteService(clienteDAO,prestamoService);
+        empleadoService = new EmpleadoService(empleadoDAO);
+        pagoService = new PagoService(pagoDAO);
         reporteService = new ReporteService(prestamoService, pagoService, clienteService, empleadoService);
         
         //View

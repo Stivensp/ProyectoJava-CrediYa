@@ -1,29 +1,24 @@
+/*
 package com.finalproyectjava.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.finalproyectjava.dao.interfaces.PrestamoDAO;
 import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.model.Prestamo.EstadoPrestamo;
 
 public class PrestamoService {
 
-    private final PrestamoDAO prestamoDAO;
+    private final List<Prestamo> prestamos = new ArrayList<>();
+    private int countIds = 1;
 
-    public PrestamoService(PrestamoDAO prestamoDAO) {
-        this.prestamoDAO = prestamoDAO;
-    }
+    // Agregar préstamo
+    public Prestamo agregarPrestamo(int clienteId,int empleadoId, double monto, double interes, int cuotas, LocalDate fechaInicio) {
 
-    // Agregar préstamo (fecha automática)
-    public Prestamo agregarPrestamo(int clienteId, int empleadoId,
-                                   double monto, double interes, int cuotas) {
-
-        LocalDate fechaInicio = LocalDate.now();
         double valorCuota = calcularValorCuota(monto, interes, cuotas);
-
         Prestamo p = new Prestamo(
-                0, // id lo asigna MySQL
+                countIds++,
                 clienteId,
                 empleadoId,
                 monto,
@@ -34,35 +29,49 @@ public class PrestamoService {
                 valorCuota
         );
 
-        return prestamoDAO.agregarPrestamoDAO(p);
+        prestamos.add(p);
+        return p;
     }
 
-    // Lista de todos los préstamos
     public List<Prestamo> listaPrestamo() {
-        return prestamoDAO.listaPrestamosDAO();
+        return prestamos;
     }
 
-    // Buscar préstamo por id
     public Prestamo buscarPrestamoId(int id) {
-        return prestamoDAO.buscarPrestamoIdDAO(id);
+        for (Prestamo p : prestamos) {
+            if (p.getId() == id) {
+                return p;
+            }
+        }
+        return null;
     }
 
-    // Cambiar estado del préstamo
     public boolean cambiarEstadoPrestamo(int id, EstadoPrestamo estado) {
-        return prestamoDAO.cambiarEstadoPrestamoDAO(id, estado);
+        Prestamo p = buscarPrestamoId(id);
+        if (p != null && p.getEstado() != estado) {
+            p.setEstado(estado);
+            return true;
+        }
+        return false;
     }
 
-    // Recalcular cuotas
-    public void recalcularCuotas(Prestamo prestamo) {
-        prestamoDAO.recalcularCuotasDAO(prestamo);
-    }
-
-    // Método privado para calcular valor de la cuota
     private double calcularValorCuota(double monto, double interes, int cuotas) {
         if (cuotas <= 0) {
             throw new IllegalArgumentException("Las cuotas deben ser mayores a 0");
         }
+
         double total = monto + (monto * interes / 100);
         return total / cuotas;
     }
+
+    // Recalcular cuotas
+    public void recalcularCuotas(Prestamo prestamo) {
+        double nuevaCuota = calcularValorCuota(
+                prestamo.getMonto(),
+                prestamo.getInteres(),
+                prestamo.getCuotas()
+        );
+        prestamo.setValorCuota(nuevaCuota);
+    }
 }
+*/

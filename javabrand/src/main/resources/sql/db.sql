@@ -53,6 +53,8 @@ CREATE TABLE prestamos (
 
   estado VARCHAR(20),
 
+  valor_cuota DECIMAL(12,2),
+
   FOREIGN KEY (cliente_id) REFERENCES clientes(id),
 
   FOREIGN KEY (empleado_id) REFERENCES empleados(id)

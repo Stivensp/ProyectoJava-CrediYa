@@ -39,8 +39,6 @@ public class ClienteView extends MenuBaseView {
              4. Actualizar cliente
              5. Eliminar cliente
              6. Mostrar préstamos del cliente
-             7. Guardar cliente en BD (MySQL)
-             8. Listar clientes desde BD
              0. Volver
              Seleccione una opcion:   
             """
@@ -53,7 +51,7 @@ public class ClienteView extends MenuBaseView {
 
             opcion = consola.nextInt();
 
-            if(opcion < 0 || opcion > 8 ){
+            if(opcion < 0 || opcion > 6 ){
                 System.out.println("Opcin fuera de rango");
                 continue;
             }
@@ -65,8 +63,6 @@ public class ClienteView extends MenuBaseView {
                 case 4 -> actualizarClienteView();
                 case 5 -> eliminarClienteIdView();
                 case 6 -> prestamosClienteView();
-                case 7 -> limpiarConsola();
-                case 8 -> limpiarConsola();
                 case 0 -> limpiarConsola();
             
                 default -> {

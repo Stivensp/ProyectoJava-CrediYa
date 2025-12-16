@@ -1,6 +1,5 @@
 package com.finalproyectjava.util.view;
 
-import java.time.LocalDate;
 
 import com.finalproyectjava.model.Pago;
 import com.finalproyectjava.service.PagoService;
@@ -35,8 +34,6 @@ public class PagoView extends MenuBaseView{
              1. Registrar pago
              2. Listar pagos
              3. Ver pagos por préstamo
-             4. Guardar pago en BD (MySQL)
-             5. Listar pagos desde BD
              0. Volver
              Seleccione una opcion:   
             """
@@ -49,7 +46,7 @@ public class PagoView extends MenuBaseView{
 
             opcion = consola.nextInt();
 
-            if(opcion < 0 || opcion > 5 ){
+            if(opcion < 0 || opcion > 3 ){
                 System.out.println("Opción fuera de rango");
                 continue;
             }
@@ -58,8 +55,6 @@ public class PagoView extends MenuBaseView{
                 case 1 -> registrarPagoView();
                 case 2 -> listaPagosView();
                 case 3 -> pagosPorPrestamoView();
-                case 4 -> limpiarConsola();
-                case 5 -> limpiarConsola();
                 case 0 -> limpiarConsola();
             
                 default -> {
@@ -72,15 +67,11 @@ public class PagoView extends MenuBaseView{
         System.out.println("Dame el id del prestamo");
         int prestamoId = consola.nextInt();
 
-        System.out.println("Fecha inicio (YYYY-MM-DD):");
-        String fechaTexto = consola.next();
-        LocalDate fechaPago = LocalDate.parse(fechaTexto);
-
         System.out.println("De cuanto es el pago?");
         Double monto = consola.nextDouble();
 
         System.out.println("Pago registrado correctamente");
-        pagoS.registrarPago(prestamoId, fechaPago, monto);
+        pagoS.registrarPago(prestamoId, monto);
     }
     //Lista de todos los pagos
     public void listaPagosView(){

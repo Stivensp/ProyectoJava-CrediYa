@@ -31,8 +31,6 @@ public class EmpleadoView extends MenuBaseView {
              3. Buscar empleado por ID
              4. Actualizar empleado
              5. Eliminar empleado
-             6. Registrar empleado en BD (MySQL)
-             7. Listar empleados desde BD
              0. Volver
              Seleccione una opcion:   
             """
@@ -45,7 +43,7 @@ public class EmpleadoView extends MenuBaseView {
 
             opcion = consola.nextInt();
 
-            if(opcion < 0 || opcion > 7 ){
+            if(opcion < 0 || opcion > 5 ){
                 System.out.println("Opción fuera de rango");
                 continue;
             }

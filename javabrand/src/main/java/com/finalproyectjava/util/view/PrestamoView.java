@@ -1,7 +1,5 @@
 package com.finalproyectjava.util.view;
 
-import java.time.LocalDate;
-
 import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.model.Prestamo.EstadoPrestamo;
 import com.finalproyectjava.service.ClienteService;
@@ -42,8 +40,6 @@ public class PrestamoView extends MenuBaseView{
             3. Buscar préstamo por ID
             4. Cambiar estado (Pendiente / Pagado)
             5. Recalcular cuotas
-            6. Guardar préstamo en BD (MySQL)
-            7. Listar préstamos desde BD
             0. Volver
              Seleccione una opcion:   
             """
@@ -56,7 +52,7 @@ public class PrestamoView extends MenuBaseView{
 
             opcion = consola.nextInt();
 
-            if(opcion < 0 || opcion > 7 ){
+            if(opcion < 0 || opcion > 5 ){
                 System.out.println("Opción fuera de rango");
                 continue;
             }
@@ -92,17 +88,12 @@ public class PrestamoView extends MenuBaseView{
         System.out.println("Cantidad de cuotas:");
         int cuotas = consola.nextInt();
 
-        System.out.println("Fecha inicio (YYYY-MM-DD):");
-        String fechaTexto = consola.next();
-        LocalDate fechaInicio = LocalDate.parse(fechaTexto);
-
         ps.agregarPrestamo(
             clienteId,
             empleadoId,
             monto,
             interes,
-            cuotas,
-            fechaInicio
+            cuotas
         );
 
         System.out.println("Préstamo registrado correctamente");
@@ -113,7 +104,7 @@ public class PrestamoView extends MenuBaseView{
         if(!ps.listaPrestamo().isEmpty()){
             for(Prestamo p : ps.listaPrestamo()){
                 System.out.println(p);
-                System.out.println("Cliente encontrado ");
+                System.out.println("Prestamo encontrado ");
             }
         }else{
                 System.out.println("Lista de prestamos vacia ");

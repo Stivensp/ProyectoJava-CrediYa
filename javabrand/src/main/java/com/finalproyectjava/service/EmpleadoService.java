@@ -1,59 +1,50 @@
 package com.finalproyectjava.service;
 
-import com.finalproyectjava.model.Empleado;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.finalproyectjava.dao.interfaces.EmpleadoDAO;
+import com.finalproyectjava.model.Empleado;
 
 public class EmpleadoService {
-    //Atributos
-    private final List<Empleado> empleados = new ArrayList<>();
-    private int countIds = 1;
-    //Metodo Registrar
-    public Empleado registrarEmpleado(String nombre, String documento, String rol, String correo, Double salario){
-        Empleado empleado = new Empleado(
-            countIds++,
-            nombre,
-            documento,
-            rol,
-            correo,
-            salario
-        );
-        empleados.add(empleado);
-        return empleado;
+    private final EmpleadoDAO empleadoDAO;
+
+    // Constructor que recibe el EmpleadoDAO
+    public EmpleadoService(EmpleadoDAO empleadoDAO) {
+        this.empleadoDAO = empleadoDAO;
     }
-    //Lista de todos los empleados
-    public List<Empleado> listaEmpleados(){
-        return empleados;
+
+    // Método Registrar
+    public Empleado registrarEmpleado(String nombre, String documento, String rol, String correo, Double salario) {
+        Empleado empleado = new Empleado(0, nombre, documento, rol, correo, salario); // id lo asigna MySQL
+        return empleadoDAO.registrarEmpleadoDAO(empleado); // Persiste en DB
     }
-    //Buscar por id empleados
-    public Empleado buscarEmpleadoId(int id){
-        for(Empleado e : empleados){
-            if(e.getId() == id){
-                return e;
-            }
-        }
-        return null;
+
+    // Lista de todos los empleados
+    public List<Empleado> listaEmpleados() {
+        return empleadoDAO.listaEmpleadosDAO(); // Obtiene de la base de datos
     }
-    //Actualizar empleado
-    public Empleado actualizarEmpleado(int id, String nombre, String documento, String rol, String correo, Double salario){
-        Empleado e = buscarEmpleadoId(id);
-        if(e != null){
+
+    // Buscar por id empleados
+    public Empleado buscarEmpleadoId(int id) {
+        return empleadoDAO.buscarEmpleadoIdDAO(id); // Busca en la base de datos
+    }
+
+    // Actualizar empleado
+    public Empleado actualizarEmpleado(int id, String nombre, String documento, String rol, String correo, Double salario) {
+        Empleado e = empleadoDAO.buscarEmpleadoIdDAO(id); // Busca el empleado por id
+        if (e != null) {
             e.setNombre(nombre);
             e.setDocumento(documento);
             e.setRol(rol);
             e.setCorreo(correo);
             e.setSalario(salario);
+            empleadoDAO.actualizarEmpleadoDAO(e); // Actualiza en la base de datos
         }
         return e;
     }
-    //Eliminar Empleado
-    public Boolean eliminarEmpleado(int id){
-        Empleado e = buscarEmpleadoId(id);
-        if(e != null){
-            empleados.remove(e);
-            return true;
-        }
-        return false;
+
+    // Eliminar Empleado
+    public Boolean eliminarEmpleado(int id) {
+        return empleadoDAO.eliminarEmpleadoDAO(id); // Elimina de la base de datos
     }
 }
