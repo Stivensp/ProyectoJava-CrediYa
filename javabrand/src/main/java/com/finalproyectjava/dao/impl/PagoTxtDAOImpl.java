@@ -88,13 +88,28 @@ public class PagoTxtDAOImpl implements PagoDAO {
         return lista;
     }
 
+    @Override
+    public double totalPagadoPorPrestamoDAO(int prestamoId) {
+        double total = 0;
+
+        for (Pago p : listaPagoDAO()) {
+            if (p.getPrestamoId() == prestamoId) {
+                total += p.getMonto();
+            }
+        }
+
+        return total;
+    }
+
     private int generarId() {
         int max = 0;
+
         for (Pago p : listaPagoDAO()) {
             if (p.getId() > max) {
                 max = p.getId();
             }
         }
+
         return max + 1;
     }
 }

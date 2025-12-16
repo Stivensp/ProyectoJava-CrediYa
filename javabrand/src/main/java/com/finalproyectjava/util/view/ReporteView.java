@@ -9,6 +9,7 @@ import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.service.ReporteService;
 
 public class ReporteView extends MenuBaseView {
+
     private final ReporteService rs;
 
     public ReporteView(ReporteService rs) {
@@ -17,12 +18,11 @@ public class ReporteView extends MenuBaseView {
 
     @Override
     public void play() {
-        int opcion = -1;
+        int opcion;
 
         do {
             System.out.println("""
-                
-                                                                                        
+                    
             ▄▄▄▄▄▄▄                                       
             ███▀▀███▄                          ██         
             ███▄▄███▀ ▄█▀█▄ ████▄ ▄███▄ ████▄ ▀██▀▀ ▄█▀█▄ 
@@ -30,25 +30,16 @@ public class ReporteView extends MenuBaseView {
             ███  ▀███ ▀█▄▄▄ ████▀ ▀███▀ ██     ██   ▀█▄▄▄ 
                             ██                            
                             ▀▀                                                                     
-             1. Préstamos activos (estado = pendiente)
+             1. Préstamos activos
              2. Préstamos pagados
-             3. Préstamos vencidos (fecha + cuotas)
-             4. Clientes morosos (saldo > 0)
-             5. Empleados con más préstamos otorgados
+             3. Préstamos vencidos
+             4. Clientes morosos
+             5. Empleados con más préstamos
              6. Total recaudado por pagos
              0. Volver
-             Seleccione una opcion:   
             """);
 
-            if (!consola.hasNextInt()) {
-                System.out.println("Debe ingresar un número.");
-                consola.nextLine();
-                continue;
-            }
-
-            opcion = consola.nextInt();
-            consola.nextLine(); 
-
+            opcion = leerEntero("Seleccione una opción:", 0, 6);
             limpiarConsola();
 
             switch (opcion) {
@@ -58,22 +49,21 @@ public class ReporteView extends MenuBaseView {
                 case 4 -> mostrarClientesMorosos(rs.clientesMorosos());
                 case 5 -> mostrarEmpleados(rs.empleadosConMasPrestamos());
                 case 6 -> System.out.println("Total recaudado: $" + rs.totalRecaudado());
-                case 0 -> System.out.println("Volviendo");
-                default -> System.out.println("Opción fuera de rango.");
+                case 0 -> System.out.println("Volviendo...");
             }
 
         } while (opcion != 0);
     }
 
+    // MOSTRAR DATOS 
+
     private void mostrarPrestamos(List<Prestamo> prestamos, String titulo) {
-        System.out.println( titulo );
+        System.out.println(titulo);
         if (prestamos.isEmpty()) {
-            System.out.println("No hay registros");
+            System.out.println("No hay registros.");
             return;
         }
-        for (Prestamo p : prestamos) {
-            System.out.println(p);
-        }
+        prestamos.forEach(System.out::println);
     }
 
     private void mostrarClientesMorosos(List<Cliente> clientes) {
@@ -82,20 +72,44 @@ public class ReporteView extends MenuBaseView {
             System.out.println("No hay clientes morosos.");
             return;
         }
-        for (Cliente c : clientes) {
-            System.out.println(c);
-        }
+        clientes.forEach(System.out::println);
     }
 
     private void mostrarEmpleados(Map<Empleado, Long> empleados) {
         System.out.println("Empleados con más préstamos otorgados");
         if (empleados.isEmpty()) {
-            System.out.println("No hay registros ");
+            System.out.println("No hay registros.");
             return;
         }
+
         empleados.entrySet()
                 .stream()
                 .sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue()))
-                .forEach(e -> System.out.println(e.getKey() + " -> " + e.getValue() + " préstamos"));
+                .forEach(e ->
+                        System.out.println(
+                                e.getKey() + " -> " + e.getValue() + " préstamos"
+                        )
+                );
+    }
+
+    private int leerEntero(String mensaje, int min) {
+        int valor;
+        do {
+            System.out.print(mensaje + " ");
+            while (!consola.hasNextInt()) {
+                System.out.println("Debe ingresar un número válido.");
+                consola.next();
+            }
+            valor = consola.nextInt();
+        } while (valor < min);
+        return valor;
+    }
+
+    private int leerEntero(String mensaje, int min, int max) {
+        int valor;
+        do {
+            valor = leerEntero(mensaje, min);
+        } while (valor > max);
+        return valor;
     }
 }

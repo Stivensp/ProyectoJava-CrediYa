@@ -52,6 +52,3 @@ crediya/
     │
     └── test/
         └── com/crediya/
-            ├── PrestamoServiceTest.java
-            ├── PagoServiceTest.java
-            └── ClienteServiceTest.java

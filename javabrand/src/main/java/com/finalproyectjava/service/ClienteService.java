@@ -9,7 +9,7 @@ import com.finalproyectjava.model.Prestamo;
 
 
 public class ClienteService {
-    private final ClienteDAO clienteDAO; // tu DAO de MySQL
+    private final ClienteDAO clienteDAO; 
     private final PrestamoService ps;
 
     public ClienteService(ClienteDAO clienteDAO, PrestamoService ps){
@@ -18,8 +18,8 @@ public class ClienteService {
     }
 
     public Cliente registrarCliente(String nombre, String documento, String correo, String telefono){
-        Cliente cliente = new Cliente(0, nombre, documento, correo, telefono); // id lo asigna MySQL
-        return clienteDAO.registrarClienteDAO(cliente); // persiste en DB
+        Cliente cliente = new Cliente(0, nombre, documento, correo, telefono); 
+        return clienteDAO.registrarClienteDAO(cliente); 
     }
 
     public List<Cliente> listaClientes(){

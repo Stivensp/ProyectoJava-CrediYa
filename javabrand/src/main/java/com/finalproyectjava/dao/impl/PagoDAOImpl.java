@@ -93,4 +93,27 @@ public class PagoDAOImpl implements PagoDAO {
 
         return lista;
     }
+
+        @Override
+    public double totalPagadoPorPrestamoDAO(int prestamoId) {
+
+        String sql = "SELECT COALESCE(SUM(monto), 0) FROM pagos WHERE prestamo_id = ?";
+        
+        try (Connection con = ConexionBD.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, prestamoId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error calculando total pagado", e);
+        }
+
+        return 0;
+    }
+
 }

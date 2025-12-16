@@ -6,153 +6,241 @@ import com.finalproyectjava.service.ClienteService;
 import com.finalproyectjava.service.EmpleadoService;
 import com.finalproyectjava.service.PrestamoService;
 
-public class PrestamoView extends MenuBaseView{
-    //Constructor vacio
+public class PrestamoView extends MenuBaseView {
+
     private final PrestamoService ps;
-    //private final ClienteService cs;
-    //private final EmpleadoService es;
 
-    public PrestamoView(PrestamoService ps, ClienteService cs, EmpleadoService es){
-        this.ps =ps;
-    //    this.cs =cs;
-    //    this.es =es;
-
+    public PrestamoView(PrestamoService ps, ClienteService cs, EmpleadoService es) {
+        this.ps = ps;
     }
-    //Base del menu
+
     @Override
-    public void play(){
+    public void play() {
         int opcion = 0;
 
-        do{
-            System.out.println("""            
-                
-                
-                                                                                                                
+        do {
+            System.out.println("""
+                    
             ▄▄▄▄▄▄▄                                                     
             ███▀▀███▄                    ██                             
             ███▄▄███▀ ████▄ ▄█▀█▄ ▄█▀▀▀ ▀██▀▀ ▀▀█▄ ███▄███▄ ▄███▄ ▄█▀▀▀ 
             ███▀▀▀▀   ██ ▀▀ ██▄█▀ ▀███▄  ██  ▄█▀██ ██ ██ ██ ██ ██ ▀███▄ 
             ███       ██    ▀█▄▄▄ ▄▄▄█▀  ██  ▀█▄██ ██ ██ ██ ▀███▀ ▄▄▄█▀ 
                                                                         
-                                                                            
             1. Crear préstamo
             2. Listar préstamos
             3. Buscar préstamo por ID
-            4. Cambiar estado (Pendiente / Pagado)
-            5. Recalcular cuotas
+            4. Cambiar estado
+            5. Recalcular cuota
+            6. Prestamo Detalles
             0. Volver
-             Seleccione una opcion:   
-            """
-            );
+            Seleccione una opción:
+            """);
 
-            if (!consola.hasNextInt()){
-                System.out.println("Debe ingresar un numero");
+            if (!consola.hasNextInt()) {
+                System.out.println("Entrada inválida. Debe ingresar un número.");
+                consola.next();
                 continue;
             }
 
             opcion = consola.nextInt();
 
-            if(opcion < 0 || opcion > 5 ){
-                System.out.println("Opción fuera de rango");
-                continue;
-            }
-
             switch (opcion) {
                 case 1 -> agregarPrestamoView();
-                case 2 -> listaPrestamosView();
+                case 2 -> listarPrestamosView();
                 case 3 -> buscarPrestamoIdView();
                 case 4 -> cambiarEstadoPrestamoView();
                 case 5 -> recalcularCuotasView();
+                case 6 -> verEstadoPrestamoView();
                 case 0 -> limpiarConsola();
-            
-                default -> {
-                }
+                default -> System.out.println("Opción fuera de rango.");
             }
-        } while(opcion != 0);
-    }
-    //Agregar pago
-    public void agregarPrestamoView() {
 
-        System.out.println("ID Cliente:");
-        int clienteId = consola.nextInt();
-
-        System.out.println("ID Empleado:");
-        int empleadoId = consola.nextInt();
-
-        System.out.println("Monto:");
-        double monto = consola.nextDouble();
-
-        System.out.println("Interés en porcentaje ej: 20");
-        double interes = consola.nextDouble();
-
-        System.out.println("Cantidad de cuotas:");
-        int cuotas = consola.nextInt();
-
-        ps.agregarPrestamo(
-            clienteId,
-            empleadoId,
-            monto,
-            interes,
-            cuotas
-        );
-
-        System.out.println("Préstamo registrado correctamente");
+        } while (opcion != 0);
     }
 
-    //Lista de todos los prestamos
-    public void listaPrestamosView(){
-        if(!ps.listaPrestamo().isEmpty()){
-            for(Prestamo p : ps.listaPrestamo()){
-                System.out.println(p);
-                System.out.println("Prestamo encontrado ");
-            }
-        }else{
-                System.out.println("Lista de prestamos vacia ");
-            }
+    private void agregarPrestamoView() {
+
+        int clienteId = leerEntero("ID Cliente:", 1);
+        int empleadoId = leerEntero("ID Empleado:", 1);
+        double monto = leerDouble("Monto:", 1);
+        double interes = leerDouble("Interés (%):", 0);
+        int cuotas = leerEntero("Cantidad de cuotas:", 1);
+
+        ps.agregarPrestamo(clienteId, empleadoId, monto, interes, cuotas);
+        System.out.println("Préstamo registrado correctamente.");
     }
-    //Buscar prestamo por id
-    public void buscarPrestamoIdView(){
-        System.out.println("ID buscado");
-        int id = consola.nextInt();
 
-        Prestamo p = ps.buscarPrestamoId(id);
-        if(p != null){
-            System.out.println(p);
-        }else{
-            System.out.println("No se encontro el prestamo");
-        }
 
-    }
-    //Cambiar estado del prestamo por id
-    public void cambiarEstadoPrestamoView(){
-        System.out.println("ID buscado");
-        int id = consola.nextInt();
+    private void listarPrestamosView() {
+        var lista = ps.listaPrestamo();
 
-        System.out.println("Estado:");
-        System.out.println("1. PENDIENTE");
-        System.out.println("2. PAGADO");
-        int opcionEstado = consola.nextInt();  
-        
-        EstadoPrestamo estadPrestamo = (opcionEstado == 1) ? EstadoPrestamo.PENDIENTE : EstadoPrestamo.PAGADO;
-    
-        ps.cambiarEstadoPrestamo(id, estadPrestamo);
-    }
-    //Recalcular cuotas
-    public void recalcularCuotasView() {
-
-        System.out.print("ID del préstamo: ");
-        int id = consola.nextInt();
-
-        Prestamo prestamo = ps.buscarPrestamoId(id);
-
-        if (prestamo == null) {
-            System.out.println("Prestamo no encontrado");
+        if (lista.isEmpty()) {
+            System.out.println("No hay prestamos registrados");
             return;
         }
 
-        ps.recalcularCuotas(prestamo);
+        lista.forEach(p -> {
+            System.out.println(p);
+            System.out.println("--------------------------------");
+        });
+    }
 
-        System.out.println("Cuota recalculada correctamente");
-        System.out.println("Nueva cuota: " + prestamo.getValorCuota());
+
+    private void buscarPrestamoIdView() {
+        int id = leerEntero("ID del préstamo:", 1);
+
+        Prestamo p = ps.buscarPrestamoId(id);
+        if (p == null) {
+            System.out.println("Préstamo no encontrado.");
+            return;
+        }
+
+        System.out.println(p);
+    }
+
+    private void cambiarEstadoPrestamoView() {
+        int id = leerEntero("ID del préstamo:", 1);
+
+        Prestamo p = ps.buscarPrestamoId(id);
+        if (p == null) {
+            System.out.println("Préstamo no encontrado.");
+            return;
+        }
+
+        System.out.println("""
+            Estado actual: %s
+            1. PENDIENTE
+            2. PAGADO
+            """.formatted(p.getEstado()));
+
+        int opcion = leerEntero("Seleccione estado:", 1, 2);
+        EstadoPrestamo nuevoEstado =
+                (opcion == 1) ? EstadoPrestamo.PENDIENTE : EstadoPrestamo.PAGADO;
+
+        ps.cambiarEstadoPrestamo(id, nuevoEstado);
+        System.out.println("Estado actualizado correctamente.");
+    }
+
+    private void recalcularCuotasView() {
+        int id = leerEntero("ID del préstamo:", 1);
+
+        Prestamo p = ps.buscarPrestamoId(id);
+        if (p == null) {
+            System.out.println("Préstamo no encontrado.");
+            return;
+        }
+
+        ps.recalcularCuotas(p);
+        System.out.println("Cuota recalculada.");
+        System.out.println("Nueva cuota: " + p.getValorCuota());
+    }
+
+private void verEstadoPrestamoView() {
+
+    int id = leerEntero("ID del préstamo:", 1);
+
+    Prestamo prestamo = ps.buscarPrestamoId(id);
+    if (prestamo == null) {
+        System.out.println("Préstamo no encontrado.");
+        return;
+    }
+
+    var pagos = ps.obtenerPagosPrestamo(id);
+
+    // Actualiza estado si ya se pagó todo
+    ps.actualizarEstadoPrestamo(id);
+
+    double totalPrestamo = ps.calcularTotalPrestamo(prestamo);
+    double totalPagado = ps.calcularTotalPagado(pagos);
+    double deudaRestante = ps.calcularDeudaRestante(prestamo, pagos);
+
+    System.out.println("""
+        ===============================
+        DETALLE DEL PRÉSTAMO
+        ===============================
+        ID Préstamo: %d
+        Cliente ID: %d
+        Empleado ID: %d
+
+        Monto original: %.2f
+        Interés: %.2f %%
+        Total a pagar: %.2f
+
+        Cuotas: %d
+        Valor por cuota: %.2f
+
+        Total pagado: %.2f
+        Deuda restante: %.2f
+
+        Estado: %s
+        ===============================
+        """.formatted(
+            prestamo.getId(),
+            prestamo.getClienteId(),
+            prestamo.getEmpleadoId(),
+            prestamo.getMonto(),
+            prestamo.getInteres(),
+            totalPrestamo,
+            prestamo.getCuotas(),
+            prestamo.getValorCuota(),
+            totalPagado,
+            deudaRestante,
+            prestamo.getEstado()
+        ));
+
+    System.out.println("PAGOS REGISTRADOS:");
+    if (pagos.isEmpty()) {
+        System.out.println("No hay pagos registrados.");
+    } else {
+        pagos.forEach(p ->
+            System.out.println(
+                "Fecha: " + p.getfechaPago() +
+                " | Monto: " + p.getMonto()
+            )
+        );
+    }
+
+
+    System.out.println("\nDETALLE DE CUOTAS:");
+    ps.generarDetalleCuotas(prestamo, pagos)
+      .forEach(System.out::println);
+
+    System.out.println("===============================");
+}
+
+
+    private int leerEntero(String mensaje, int min) {
+        int valor;
+        do {
+            System.out.print(mensaje + " ");
+            while (!consola.hasNextInt()) {
+                System.out.println("Debe ingresar un número válido.");
+                consola.next();
+            }
+            valor = consola.nextInt();
+        } while (valor < min);
+        return valor;
+    }
+
+    private int leerEntero(String mensaje, int min, int max) {
+        int valor;
+        do {
+            valor = leerEntero(mensaje, min);
+        } while (valor > max);
+        return valor;
+    }
+
+    private double leerDouble(String mensaje, double min) {
+        double valor;
+        do {
+            System.out.print(mensaje + " ");
+            while (!consola.hasNextDouble()) {
+                System.out.println("Debe ingresar un número válido.");
+                consola.next();
+            }
+            valor = consola.nextDouble();
+        } while (valor < min);
+        return valor;
     }
 }

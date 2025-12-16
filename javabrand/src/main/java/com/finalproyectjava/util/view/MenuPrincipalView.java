@@ -17,56 +17,66 @@ import com.finalproyectjava.service.PrestamoService;
 import com.finalproyectjava.service.ReporteService;
 
 public class MenuPrincipalView extends MenuBaseView {
-    //Dao
+
+    // DAO 
     ClienteDAO clienteDAO = new ClienteDAOImpl();
     EmpleadoDAO empleadoDAO = new EmpleadoDAOImpl();
     PrestamoDAO prestamoDAO = new PrestamoDAOImpl();
-    
     PagoDAO pagoDAO = new PagoDualDAOImpl(
             new PagoDAOImpl(),
             new PagoTxtDAOImpl()
     );
-    
-    //Atributos Service
+
+    //  SERVICES 
     private final EmpleadoService empleadoService;
     private final ClienteService clienteService;
     private final PrestamoService prestamoService;
     private final PagoService pagoService;
     private final ReporteService reporteService;
-    
-    //Atributos View
+
+    //  VIEWS
     private final ReporteView rv;
     private final EmpleadoView ev;
     private final ClienteView cv;
     private final PrestamoView pv;
-    private final PagoView pagoS;
+    private final PagoView pagoV;
 
-    //Contructor
+    //  CONSTRUCTOR
     public MenuPrincipalView() {
-        //Service
-        prestamoService = new PrestamoService(prestamoDAO);
-        clienteService = new ClienteService(clienteDAO,prestamoService);
-        empleadoService = new EmpleadoService(empleadoDAO);
+
+        //  Pago primero
         pagoService = new PagoService(pagoDAO);
-        reporteService = new ReporteService(prestamoService, pagoService, clienteService, empleadoService);
-        
-        //View
+
+        // Prestamo necesita PagoService
+        prestamoService = new PrestamoService(prestamoDAO, pagoService);
+
+        //  Cliente necesita PrestamoService
+        clienteService = new ClienteService(clienteDAO, prestamoService);
+
+        // Otros services
+        empleadoService = new EmpleadoService(empleadoDAO);
+        reporteService = new ReporteService(
+                prestamoService,
+                pagoService,
+                clienteService,
+                empleadoService
+        );
+
+        //  Views
         rv = new ReporteView(reporteService);
         ev = new EmpleadoView(empleadoService);
         cv = new ClienteView(clienteService, prestamoService);
         pv = new PrestamoView(prestamoService, clienteService, empleadoService);
-        pagoS = new PagoView(pagoService, prestamoService);
+        pagoV = new PagoView(pagoService, prestamoService);
     }
-    //Base del menu
+
     @Override
-    public void play(){
+    public void play() {
         int opcion = 0;
 
-        do{
-            System.out.println("""            
-                
-                
-                
+        do {
+            System.out.println("""
+                    
             ▄▄▄▄▄▄▄                                         ▄▄ 
             ███▀▀███▄       ▀▀              ▀▀              ██ 
             ███▄▄███▀ ████▄ ██  ████▄ ▄████ ██  ████▄  ▀▀█▄ ██ 
@@ -76,54 +86,31 @@ public class MenuPrincipalView extends MenuBaseView {
                                                 ▀▀                        
              1. Gestión de Empleados
              2. Gestión de Clientes
-             3. Gestión de Prestamos
+             3. Gestión de Préstamos
              4. Gestión de Pagos
              5. Reportes
-             6. Gestión Técnico
              0. Salir
-             Seleccione una opcion:   
-            """
-            );
+             Seleccione una opción:
+            """);
 
-            if (!consola.hasNextInt()){
-                System.out.println("Debe ingresar un numero");
+            if (!consola.hasNextInt()) {
+                System.out.println("Debe ingresar un número");
+                consola.next();
                 continue;
             }
 
             opcion = consola.nextInt();
 
-            if(opcion < 0 || opcion > 6 ){
-                System.out.println("Opción fuera de rango");
-                continue;
+            switch (opcion) {
+                case 1 -> { limpiarConsola(); ev.play(); }
+                case 2 -> { limpiarConsola(); cv.play(); }
+                case 3 -> { limpiarConsola(); pv.play(); }
+                case 4 -> { limpiarConsola(); pagoV.play(); }
+                case 5 -> { limpiarConsola(); rv.play(); }
+                case 0 -> limpiarConsola();
+                default -> System.out.println("Opción fuera de rango");
             }
 
-            switch (opcion) {
-                case 1 -> {
-                    limpiarConsola();
-                    ev.play();
-                }
-                case 2 -> {
-                    limpiarConsola();
-                    cv.play();
-                }
-                case 3 -> {
-                    limpiarConsola();
-                    pv.play();
-                }
-                case 4 ->{
-                    limpiarConsola();
-                    pagoS.play();                    
-                }
-                case 5 ->{
-                    limpiarConsola();                    
-                    rv.play();
-                }
-                case 6 -> limpiarConsola();
-                case 0 -> limpiarConsola();
-            
-                default -> {
-                }
-            }
-        } while(opcion != 0);
+        } while (opcion != 0);
     }
 }

@@ -8,4 +8,5 @@ public interface PagoDAO {
     Pago registrarPagoDAO(Pago p);
     List<Pago> listaPagoDAO();
     List<Pago> pagoPorPrestamoDAO(int prestamoId);
+    double totalPagadoPorPrestamoDAO(int prestamoId);
 }

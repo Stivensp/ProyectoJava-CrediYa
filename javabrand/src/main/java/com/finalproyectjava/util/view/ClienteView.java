@@ -1,5 +1,7 @@
 package com.finalproyectjava.util.view;
 
+import java.util.List;
+
 import com.finalproyectjava.model.Cliente;
 import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.service.ClienteService;
@@ -8,31 +10,25 @@ import com.finalproyectjava.service.PrestamoService;
 public class ClienteView extends MenuBaseView {
 
     private final ClienteService cs;
-   // private final PrestamoService ps;
 
-    //Constructor 
-    public ClienteView(ClienteService cs, PrestamoService ps){
+    // Constructor
+    public ClienteView(ClienteService cs, PrestamoService ps) {
         this.cs = cs;
-    // this.ps = ps;
     }
 
-    //Base del menu
+    // Menú principal
     @Override
-    public void play(){
-        int opcion = 0;
-
-        do{
-            System.out.println("""            
-                
-                
-                                        
+    public void play() {
+        int opcion;
+        do {
+            System.out.println("""
+                    
             ▄▄▄▄▄▄▄ ▄▄                             
             ███▀▀▀▀▀ ██ ▀▀               ██         
             ███      ██ ██  ▄█▀█▄ ████▄ ▀██▀▀ ▄█▀█▄ 
             ███      ██ ██  ██▄█▀ ██ ██  ██   ██▄█▀ 
             ▀███████ ██ ██▄ ▀█▄▄▄ ██ ██  ██   ▀█▄▄▄ 
                                                     
-                                                            
              1. Registrar cliente
              2. Listar clientes
              3. Buscar cliente por ID
@@ -40,115 +36,150 @@ public class ClienteView extends MenuBaseView {
              5. Eliminar cliente
              6. Mostrar préstamos del cliente
              0. Volver
-             Seleccione una opcion:   
-            """
-            );
+            """);
 
-            if (!consola.hasNextInt()){
-                System.out.println("Debe ingresar un numero");
-                continue;
-            }
-
-            opcion = consola.nextInt();
-
-            if(opcion < 0 || opcion > 6 ){
-                System.out.println("Opcin fuera de rango");
-                continue;
-            }
+            opcion = leerEntero("Seleccione una opción:", 0, 6);
 
             switch (opcion) {
                 case 1 -> registrarClienteView();
-                case 2 -> listaClientesView();
-                case 3 -> buscaIdClienteView();
+                case 2 -> listarClientesView();
+                case 3 -> buscarClienteIdView();
                 case 4 -> actualizarClienteView();
-                case 5 -> eliminarClienteIdView();
+                case 5 -> eliminarClienteView();
                 case 6 -> prestamosClienteView();
                 case 0 -> limpiarConsola();
-            
-                default -> {
-                }
             }
-        } while(opcion != 0);
-    }    
-    //Metodos de registro
-    public void registrarClienteView(){
-        System.out.println("Nombre ");
-        String nombre = consola.next();
-
-        System.out.println("Documento ");
-        String documento = consola.next();
-
-        System.out.println("Correo ");
-        String correo = consola.next();
-
-        System.out.println("Telefono" );
-        String telefono = consola.next();
-        cs.registrarCliente(nombre, documento, correo, telefono);        
+        } while (opcion != 0);
     }
-    //Metodo de lista de todos los clientes
-    public void listaClientesView(){
-        for(Cliente c : cs.listaClientes()){
-            System.out.println(c);
+
+    // Registrar cliente
+    private void registrarClienteView() {
+        consola.nextLine();
+
+        String nombre = leerTexto("Nombre:");
+        String documento = leerTexto("Documento:");
+        String correo = leerCorreo("Correo:");
+        String telefono = leerTelefono("Teléfono:");
+
+        cs.registrarCliente(nombre, documento, correo, telefono);
+        System.out.println("Cliente registrado correctamente");
+    }
+
+    // Listar clientes
+    private void listarClientesView() {
+        List<Cliente> clientes = cs.listaClientes();
+        if (clientes.isEmpty()) {
+            System.out.println("No hay clientes registrados.");
+            return;
         }
-    }
-    //Metodo buscar por id
-    public void buscaIdClienteView(){
-        System.out.println("Buscador de ID ");
-        int findId = consola.nextInt();
-        
-        Cliente c = cs.buscarClienteId(findId);
 
-        if(c != null){
-            System.out.println(c);
-            System.out.println("Cliente encontrado");
-        }else {
-            System.out.println("Cliente no encontrado");
+        clientes.forEach(System.out::println);
+    }
+
+    // Buscar cliente por ID
+    private void buscarClienteIdView() {
+        int id = leerEntero("Ingrese ID del cliente:", 1);
+
+        Cliente c = cs.buscarClienteId(id);
+        if (c == null) {
+            System.out.println("Cliente no encontrado.");
+            return;
         }
+
+        System.out.println(c);
     }
-    //Metodo actualizar por id
-    public void actualizarClienteView(){
-        System.out.println("Buscador de ID ");
-        int findId = consola.nextInt();
 
-        System.out.println("Nombre ");
-        String nombre = consola.next();
+    // Actualizar cliente
+    private void actualizarClienteView() {
+        int id = leerEntero("Ingrese ID del cliente:", 1);
+        consola.nextLine();
 
-        System.out.println("Documento ");
-        String documento = consola.next();
+        String nombre = leerTexto("Nuevo nombre:");
+        String documento = leerTexto("Nuevo documento:");
+        String correo = leerCorreo("Nuevo correo:");
+        String telefono = leerTelefono("Nuevo teléfono:");
 
-        System.out.println("Correo ");
-        String correo = consola.next();
-
-        System.out.println("Telefono" );
-        String telefono = consola.next();
-        cs.actualizarCliente(findId, nombre, documento, correo, telefono);        
+        cs.actualizarCliente(id, nombre, documento, correo, telefono);
+        System.out.println("Cliente actualizado correctamente.");
     }
-    //Metodo eliminar por id
-    public void eliminarClienteIdView(){
-        System.out.println("Buscador de ID ");
-        int findId = consola.nextInt();
-        
-        boolean bol = cs.eliminarCliente(findId);
-        if(bol == true){
-            System.out.println("Cliente eliminado");
+
+    // Eliminar cliente
+    private void eliminarClienteView() {
+        int id = leerEntero("Ingrese ID del cliente:", 1);
+
+        if (cs.eliminarCliente(id)) {
+            System.out.println("Cliente eliminado.");
         } else {
-            System.out.println("Cliente no encontrado");
+            System.out.println("Cliente no encontrado.");
         }
     }
+
     // Mostrar préstamos del cliente
-    public void prestamosClienteView(){
-        System.out.println("Buscador de ID");
-        int clienteId = consola.nextInt();
+    private void prestamosClienteView() {
+        int id = leerEntero("Ingrese ID del cliente:", 1);
 
-        if(!cs.prestamosCliente(clienteId).isEmpty()){
-            for(Prestamo p : cs.prestamosCliente(clienteId)){
-                System.out.println(p);
-                System.out.println("Prestamos encontrados");
-            }
-        }else{
-            System.out.println("Clientes no encontrados");
+        List<Prestamo> prestamos = cs.prestamosCliente(id);
+        if (prestamos.isEmpty()) {
+            System.out.println("El cliente no tiene préstamos o no existe.");
+            return;
         }
 
+        prestamos.forEach(System.out::println);
     }
 
+    // VALIDACIONES 
+
+    private int leerEntero(String mensaje, int min) {
+        int valor;
+        do {
+            System.out.print(mensaje + " ");
+            while (!consola.hasNextInt()) {
+                System.out.println("Debe ingresar un número válido.");
+                consola.next();
+            }
+            valor = consola.nextInt();
+        } while (valor < min);
+        return valor;
+    }
+
+    private int leerEntero(String mensaje, int min, int max) {
+        int valor;
+        do {
+            valor = leerEntero(mensaje, min);
+        } while (valor > max);
+        return valor;
+    }
+
+    private String leerTexto(String mensaje) {
+        String texto;
+        do {
+            System.out.print(mensaje + " ");
+            texto = consola.nextLine().trim();
+        } while (texto.isEmpty());
+        return texto;
+    }
+
+    private String leerCorreo(String mensaje) {
+        String correo;
+        do {
+            correo = leerTexto(mensaje);
+            if (!correo.contains("@") || !correo.contains(".")) {
+                System.out.println("Correo inválido.");
+                correo = "";
+            }
+        } while (correo.isEmpty());
+        return correo;
+    }
+
+    private String leerTelefono(String mensaje) {
+        String telefono;
+        do {
+            telefono = leerTexto(mensaje);
+            if (!telefono.matches("\\d+")) {
+                System.out.println("El teléfono solo debe contener números.");
+                telefono = "";
+            }
+        } while (telefono.isEmpty());
+        return telefono;
+    }
 }

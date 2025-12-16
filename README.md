@@ -1,54 +1,178 @@
-# ProyectoJava-CrediYa
+ CrediYa – Sistema de Gestión de Préstamos
 
-## Descripción
+CrediYa es una aplicación desarrollada en Java que permite la gestión de clientes, empleados, préstamos y pagos, utilizando una arquitectura en capas basada en DAO + Service, con persistencia en MySQL y archivos de texto.
 
-CrediYa es un sistema de consola desarrollado en Java para la gestión integral de préstamos personales en una empresa financiera.  
-El sistema permite administrar empleados, clientes, préstamos y pagos, facilitando el control de la cartera de créditos mediante funcionalidades robustas y una interfaz de línea de comandos sencilla.
+El proyecto está diseñado con enfoque en buenas prácticas, separación de responsabilidades y facilidad de mantenimiento.
 
-El proyecto aplica principios sólidos de programación orientada a objetos (POO), utiliza persistencia dual con archivos de texto y base de datos MySQL (a través de JDBC), y cuenta con módulos independientes para garantizar una arquitectura modular y escalable.
+ Funcionalidades principales
+ Clientes
 
----
+Registrar clientes
 
-## Funcionalidades principales
+Listar clientes
 
-- Registro y consulta de empleados (con roles y salarios).
-- Gestión de clientes y sus datos de contacto.
-- Creación y seguimiento de préstamos, cálculo automático de cuotas e intereses.
-- Registro de pagos y actualización automática de saldos pendientes.
-- Generación de reportes personalizados utilizando Streams y expresiones Lambda para análisis de cartera.
-- Persistencia de datos mediante archivos locales y base de datos MySQL.
-- Manejo de excepciones y validaciones para garantizar integridad y confiabilidad.
+Buscar cliente por ID
 
----
+Actualizar información del cliente
 
-## Tecnologías y conceptos aplicados
+Eliminar cliente
 
-- Lenguaje Java (JDK 8+)
-- Programación Orientada a Objetos (POO): herencia, polimorfismo, encapsulamiento.
-- JDBC para conexión y manejo de base de datos MySQL.
-- Manejo de colecciones, Streams y expresiones Lambda para filtrado y procesamiento de datos.
-- Diseño modular basado en patrones DAO y capas de servicio.
-- Manejo de archivos para persistencia local.
-- Buenas prácticas de diseño (principios SOLID).
-- Manejo de excepciones personalizadas.
+Consultar préstamos asociados a un cliente
 
----
+ Empleados
 
-## Estructura del proyecto
+Registrar empleados
 
-- `model/`: Clases que representan las entidades principales (Empleado, Cliente, Préstamo, Pago).
-- `dao/`: Interfaces y clases para acceso a datos (archivo y base de datos).
-- `service/`: Lógica de negocio y validaciones.
-- `app/`: Punto de entrada y menú de interacción.
-- `util/`: Utilidades varias (conexión, manejo de archivos, menú).
-- `exceptions/`: Clases de excepciones personalizadas.
-- `resources/data/`: Archivos para persistencia local.
-- `resources/sql/`: Scripts para creación y gestión de la base de datos MySQL.
+Listar empleados
 
----
+Buscar empleado por ID
 
-## Instalación y uso
+Actualizar empleado
 
-1. Clonar el repositorio:  
-   ```bash
-   git clone https://github.com/tu_usuario/ProyectoJava-CrediYa.git
+Eliminar empleado
+
+ Préstamos
+
+Registrar préstamos
+
+Asociar préstamos a clientes y empleados
+
+Control de estado del préstamo (pendiente, pagado, vencido)
+
+Cálculo de saldo
+
+Listado de préstamos
+
+ Pagos
+
+Registrar pagos a préstamos
+
+Listar pagos
+
+Consultar pagos por préstamo
+
+Persistencia adicional en archivo .txt
+
+ Reportes
+
+Préstamos activos
+
+Préstamos pagados
+
+Préstamos vencidos
+
+Clientes morosos
+
+Empleados con más préstamos otorgados
+
+Total recaudado por pagos
+
+ Arquitectura del proyecto
+
+El proyecto sigue una arquitectura en capas, separando claramente responsabilidades:
+
+Presentation (View / Menu)
+        ↓
+Service (Lógica de negocio)
+        ↓
+DAO (Interfaces)
+        ↓
+DAO Impl (Persistencia)
+        ↓
+Database / Archivos
+
+📁 Estructura del proyecto
+crediya/
+└── src/
+    ├── main/
+    │   ├── java/
+    │   │   └── com/crediya/
+    │   │       ├── app/          → Clase Main
+    │   │       ├── model/        → Entidades del dominio
+    │   │       ├── dao/
+    │   │       │   ├── interfaces/
+    │   │       │   └── impl/
+    │   │       ├── service/      → Lógica de negocio
+    │   │       ├── util/         → Utilidades (BD, archivos)
+    │   │       └── exceptions/   → Excepciones personalizadas
+    │   └── resources/
+    │       ├── data/             → Archivos .txt
+    │       └── sql/              → Script de base de datos
+
+ Modelo de dominio
+
+Cliente solicita uno o varios préstamos
+
+Empleado otorga préstamos
+
+Préstamo pertenece a un cliente y un empleado
+
+Pago pertenece a un préstamo
+
+Relaciones clave:
+
+Cliente 1..* Préstamo
+
+Empleado 1..* Préstamo
+
+Préstamo 1..* Pago
+
+🔌 Persistencia
+Base de datos
+
+MySQL
+
+Conexión centralizada en ConexionBD
+
+Acceso a datos mediante patrón DAO
+
+Archivos
+
+Persistencia de pagos en archivo pagos.txt
+
+Manejado mediante ArchivoUtil
+
+
+🛠️ Tecnologías utilizadas
+
+Java SE
+
+JDBC
+
+MySQL
+
+Arquitectura DAO
+
+Programación orientada a objetos
+
+UML (Class Diagram)
+
+Archivos de texto (.txt)
+
+▶️ Cómo ejecutar el proyecto
+
+Crear la base de datos usando el script:
+
+src/main/resources/sql/crediya_schema.sql
+
+
+Configurar credenciales en:
+
+util/ConexionBD.java
+
+
+Ejecutar la clase:
+
+com.crediya.app.Main
+
+📌 Principios aplicados
+
+Separación de responsabilidades
+
+Bajo acoplamiento
+
+Alta cohesión
+
+Programación contra interfaces
+
+Arquitectura mantenible y escalable

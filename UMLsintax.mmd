@@ -1,0 +1,97 @@
+classDiagram
+    %% MODEL
+    namespace model {
+        class Cliente {
+            -id : int
+            -nombre : String
+            -documento : String
+        }
+        class Empleado {
+            -id : int
+            -nombre : String
+            -cargo : String
+        }
+        class Prestamo {
+            -id : int
+            -monto : double
+            -cuotas : int
+            -saldo : double
+            -estado : EstadoPrestamo
+            -fechaInicio : LocalDate
+        }
+        class Pago {
+            -id : int
+            -monto : double
+            -fecha : LocalDate
+        }
+    }
+    Cliente "1" <-- "0..*" Prestamo : solicita
+    Empleado "1" <-- "0..*" Prestamo : otorga
+    Prestamo "1" <-- "0..*" Pago : recibe
+
+    %% DAO - Interfaces
+    namespace dao_interfaces {
+        class ClienteDAO {
+            <<interface>>
+            +guardar(c: Cliente)
+            +buscarPorId(id: int)
+            +listar()
+        }
+        class EmpleadoDAO {
+            <<interface>>
+            +guardar(e: Empleado)
+            +buscarPorId(id: int)
+        }
+        class PrestamoDAO {
+            <<interface>>
+            +guardar(p: Prestamo)
+            +buscarPorId(id: int)
+            +listar()
+        }
+        class PagoDAO {
+            <<interface>>
+            +guardar(p: Pago)
+            +listar()
+            +buscarPorPrestamo(idPrestamo: int)
+        }
+    }
+
+    %% DAO - Implementations
+    namespace dao_impl {
+        class ClienteDAOImpl
+        class EmpleadoDAOImpl
+        class PrestamoDAOImpl
+        class PagoDAOImpl
+    }
+    ClienteDAOImpl ..|> dao_interfaces.ClienteDAO
+    EmpleadoDAOImpl ..|> dao_interfaces.EmpleadoDAO
+    PrestamoDAOImpl ..|> dao_interfaces.PrestamoDAO
+    PagoDAOImpl ..|> dao_interfaces.PagoDAO
+
+    %% SERVICE
+    namespace service {
+        class ClienteService
+        class EmpleadoService
+        class PrestamoService
+        class PagoService
+    }
+    PrestamoService --> ClienteService
+    PrestamoService --> EmpleadoService
+    PagoService --> PrestamoService
+    ClienteService --> dao_interfaces.ClienteDAO
+    EmpleadoService --> dao_interfaces.EmpleadoDAO
+    PrestamoService --> dao_interfaces.PrestamoDAO
+    PagoService --> dao_interfaces.PagoDAO
+
+    %% UTIL
+    namespace util {
+        class ConexionBD
+        class ArchivoUtil
+    }
+
+    %% DAO-Impl dependencies on UTIL
+    dao_impl.ClienteDAOImpl --> util.ConexionBD
+    dao_impl.EmpleadoDAOImpl --> util.ConexionBD
+    dao_impl.PrestamoDAOImpl --> util.ConexionBD
+    dao_impl.PagoDAOImpl --> util.ConexionBD
+    dao_impl.PagoDAOImpl --> util.ArchivoUtil

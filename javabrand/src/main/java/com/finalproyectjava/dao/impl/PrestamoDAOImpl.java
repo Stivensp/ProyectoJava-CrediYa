@@ -17,8 +17,12 @@ public class PrestamoDAOImpl implements PrestamoDAO {
 
     @Override
     public Prestamo agregarPrestamoDAO(Prestamo p) {
-        String sql = "INSERT INTO prestamos (cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado, valor_cuota) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = """
+            INSERT INTO prestamos 
+            (cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado, valor_cuota)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
         try (Connection con = ConexionBD.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -35,13 +39,14 @@ public class PrestamoDAOImpl implements PrestamoDAO {
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    p.setId(rs.getInt(1)); 
+                    p.setId(rs.getInt(1));
                 }
             }
 
         } catch (SQLException ex) {
-            throw new RuntimeException("Error al agregar préstamo: " + ex.getMessage(), ex);
+            throw new RuntimeException("Error al agregar préstamo", ex);
         }
+
         return p;
     }
 
@@ -55,22 +60,11 @@ public class PrestamoDAOImpl implements PrestamoDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Prestamo p = new Prestamo(
-                        rs.getInt("id"),
-                        rs.getInt("cliente_id"),
-                        rs.getInt("empleado_id"),
-                        rs.getDouble("monto"),
-                        rs.getDouble("interes"),
-                        rs.getInt("cuotas"),
-                        rs.getDate("fecha_inicio").toLocalDate(),
-                        EstadoPrestamo.valueOf(rs.getString("estado")),
-                        rs.getDouble("valor_cuota")
-                );
-                lista.add(p);
+                lista.add(mapearPrestamo(rs));
             }
 
         } catch (SQLException ex) {
-            throw new RuntimeException("Error al listar préstamos: " + ex.getMessage(), ex);
+            throw new RuntimeException("Error al listar préstamos", ex);
         }
 
         return lista;
@@ -79,57 +73,45 @@ public class PrestamoDAOImpl implements PrestamoDAO {
     @Override
     public Prestamo buscarPrestamoIdDAO(int id) {
         String sql = "SELECT * FROM prestamos WHERE id = ?";
+
         try (Connection con = ConexionBD.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, id);
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new Prestamo(
-                            rs.getInt("id"),
-                            rs.getInt("cliente_id"),
-                            rs.getInt("empleado_id"),
-                            rs.getDouble("monto"),
-                            rs.getDouble("interes"),
-                            rs.getInt("cuotas"),
-                            rs.getDate("fecha_inicio").toLocalDate(),
-                            EstadoPrestamo.valueOf(rs.getString("estado")),
-                            rs.getDouble("valor_cuota")
-                    );
+                    return mapearPrestamo(rs);
                 }
             }
 
         } catch (SQLException ex) {
-            throw new RuntimeException("Error al buscar préstamo por ID: " + ex.getMessage(), ex);
+            throw new RuntimeException("Error al buscar préstamo", ex);
         }
+
         return null;
     }
 
     @Override
     public boolean cambiarEstadoPrestamoDAO(int id, EstadoPrestamo estado) {
         String sql = "UPDATE prestamos SET estado = ? WHERE id = ?";
+
         try (Connection con = ConexionBD.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, estado.name());
             ps.setInt(2, id);
-            int filas = ps.executeUpdate();
-            return filas > 0;
+            return ps.executeUpdate() > 0;
 
         } catch (SQLException ex) {
-            throw new RuntimeException("Error al cambiar estado del préstamo: " + ex.getMessage(), ex);
+            throw new RuntimeException("Error al cambiar estado del préstamo", ex);
         }
     }
 
     @Override
     public void recalcularCuotasDAO(Prestamo prestamo) {
-        if (prestamo.getCuotas() <= 0) {
-            throw new IllegalArgumentException("Las cuotas deben ser mayores a 0");
-        }
-        double total = prestamo.getMonto() + (prestamo.getMonto() * prestamo.getInteres() / 100);
-        prestamo.setValorCuota(total / prestamo.getCuotas());
-
         String sql = "UPDATE prestamos SET valor_cuota = ? WHERE id = ?";
+
         try (Connection con = ConexionBD.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -138,7 +120,62 @@ public class PrestamoDAOImpl implements PrestamoDAO {
             ps.executeUpdate();
 
         } catch (SQLException ex) {
-            throw new RuntimeException("Error al recalcular cuota: " + ex.getMessage(), ex);
+            throw new RuntimeException("Error al recalcular cuota", ex);
         }
+    }
+
+
+    @Override
+    public void actualizarEstadoYCuotaDAO(int id, EstadoPrestamo estado, double valorCuota) {
+        String sql = "UPDATE prestamos SET estado = ?, valor_cuota = ? WHERE id = ?";
+
+        try (Connection con = ConexionBD.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, estado.name());
+            ps.setDouble(2, valorCuota);
+            ps.setInt(3, id);
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error al actualizar estado y cuota", ex);
+        }
+    }
+
+    @Override
+    public List<Prestamo> listarPrestamosPorEstadoDAO(EstadoPrestamo estado) {
+        List<Prestamo> lista = new ArrayList<>();
+        String sql = "SELECT * FROM prestamos WHERE estado = ?";
+
+        try (Connection con = ConexionBD.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, estado.name());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearPrestamo(rs));
+                }
+            }
+
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error al listar préstamos por estado", ex);
+        }
+
+        return lista;
+    }
+
+    private Prestamo mapearPrestamo(ResultSet rs) throws SQLException {
+        return new Prestamo(
+                rs.getInt("id"),
+                rs.getInt("cliente_id"),
+                rs.getInt("empleado_id"),
+                rs.getDouble("monto"),
+                rs.getDouble("interes"),
+                rs.getInt("cuotas"),
+                rs.getDate("fecha_inicio").toLocalDate(),
+                EstadoPrestamo.valueOf(rs.getString("estado")),
+                rs.getDouble("valor_cuota")
+        );
     }
 }
