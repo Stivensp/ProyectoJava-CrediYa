@@ -126,4 +126,6 @@ public class PrestamoServiceImpl implements IPrestamoService {
         }
         return (monto + (monto * interes / 100)) / cuotas;
     }
+
+    
 }

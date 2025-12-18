@@ -12,9 +12,12 @@ import com.finalproyectjava.dao.interfaces.PagoDAO;
 import com.finalproyectjava.dao.interfaces.PrestamoDAO;
 import com.finalproyectjava.service.impl.ClienteServiceImpl;
 import com.finalproyectjava.service.impl.EmpleadoServiceImpl;
+import com.finalproyectjava.service.impl.GeneradorReportesImpl;
 import com.finalproyectjava.service.impl.PagoServiceImpl;
 import com.finalproyectjava.service.impl.PrestamoServiceImpl;
 import com.finalproyectjava.service.impl.ReporteServiceImpl;
+
+
 
 public class MenuPrincipalView extends MenuBaseView {
 
@@ -33,6 +36,7 @@ public class MenuPrincipalView extends MenuBaseView {
     private final PrestamoServiceImpl prestamoService;
     private final PagoServiceImpl pagoService;
     private final ReporteServiceImpl reporteService;
+    private final GeneradorReportesImpl generadorReporte;
 
     //  VIEWS
     private final ReporteView rv;
@@ -43,20 +47,22 @@ public class MenuPrincipalView extends MenuBaseView {
 
     //  CONSTRUCTOR
     public MenuPrincipalView() {
-    //  Pago primero
-    pagoService = new PagoServiceImpl(pagoDAO);
-    // Prestamo necesita PagoService
-    prestamoService = new PrestamoServiceImpl(prestamoDAO, pagoService);
-    //  Cliente necesita PrestamoService
-    clienteService = new ClienteServiceImpl(clienteDAO, prestamoService);
-    // Otros services
-    empleadoService = new EmpleadoServiceImpl(empleadoDAO);
-    reporteService = new ReporteServiceImpl(prestamoService,pagoService,clienteService,empleadoService);
+        //  Pago primero
+        pagoService = new PagoServiceImpl(pagoDAO);
+        // Prestamo necesita PagoService
+        prestamoService = new PrestamoServiceImpl(prestamoDAO, pagoService);
+        //  Cliente necesita PrestamoService
+        clienteService = new ClienteServiceImpl(clienteDAO, prestamoService);
+        // Otros services
+        empleadoService = new EmpleadoServiceImpl(empleadoDAO);
+        reporteService = new ReporteServiceImpl(prestamoService,pagoService,clienteService,empleadoService);
+
+        generadorReporte= new GeneradorReportesImpl(prestamoService,pagoService,clienteService,empleadoService,pagoDAO);
     //  Views
-    rv = new ReporteView(reporteService);
     ev = new EmpleadoView(empleadoService);
     cv = new ClienteView(clienteService, prestamoService);
     pv = new PrestamoView(prestamoService, clienteService, empleadoService);
+    rv = new ReporteView(reporteService, generadorReporte,pv);
     pagoV = new PagoView(pagoService, prestamoService);
     }
 

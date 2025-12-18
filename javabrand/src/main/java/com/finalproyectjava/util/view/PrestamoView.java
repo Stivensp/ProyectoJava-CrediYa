@@ -72,7 +72,7 @@ public class PrestamoView extends MenuBaseView {
     }
 
 
-    private void listarPrestamosView() {
+    public void listarPrestamosView() {
         var lista = ps.listaPrestamo();
 
         if (lista.isEmpty()) {
@@ -136,7 +136,7 @@ public class PrestamoView extends MenuBaseView {
         System.out.println("Nueva cuota: " + p.getValorCuota());
     }
 
-private void verEstadoPrestamoView() {
+   public void verEstadoPrestamoView() {
 
     int id = leerEntero("ID del préstamo:", 1);
 

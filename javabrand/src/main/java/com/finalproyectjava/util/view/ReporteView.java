@@ -6,14 +6,19 @@ import java.util.Map;
 import com.finalproyectjava.model.Cliente;
 import com.finalproyectjava.model.Empleado;
 import com.finalproyectjava.model.Prestamo;
+import com.finalproyectjava.service.impl.GeneradorReportesImpl;
 import com.finalproyectjava.service.impl.ReporteServiceImpl;
 
 public class ReporteView extends MenuBaseView {
 
     private final ReporteServiceImpl rs;
+    private final GeneradorReportesImpl gr;
+    private final PrestamoView pv;
 
-    public ReporteView(ReporteServiceImpl rs) {
+    public ReporteView(ReporteServiceImpl rs, GeneradorReportesImpl gr, PrestamoView pv) {
+        this.gr = gr;
         this.rs = rs;
+        this.pv = pv;
     }
 
     @Override
@@ -36,19 +41,23 @@ public class ReporteView extends MenuBaseView {
              4. Clientes morosos
              5. Empleados con más préstamos
              6. Total recaudado por pagos
+             7. Resumen Estadistico
+             8. Lista de clientes activos
              0. Volver
             """);
 
-            opcion = leerEntero("Seleccione una opción:", 0, 6);
+            opcion = leerEntero("Seleccione una opción:", 0, 8);
             limpiarConsola();
 
             switch (opcion) {
-                case 1 -> mostrarPrestamos(rs.prestamosActivos(), "Préstamos Activos");
-                case 2 -> mostrarPrestamos(rs.prestamosPagados(), "Préstamos Pagados");
-                case 3 -> mostrarPrestamos(rs.prestamosVencidos(), "Préstamos Vencidos");
-                case 4 -> mostrarClientesMorosos(rs.clientesMorosos());
+                case 1 -> mostrarPrestamos(gr.prestamosActivos(), "Préstamos Activos");
+                case 2 -> mostrarPrestamos(gr.prestamosPagados(), "Préstamos Pagados");
+                case 3 -> mostrarPrestamos(gr.prestamosVencidos(), "Préstamos Vencidos");
+                case 4 -> mostrarClientesMorosos(gr.clientesMorosos());
                 case 5 -> mostrarEmpleados(rs.empleadosConMasPrestamos());
                 case 6 -> System.out.println("Total recaudado: $" + rs.totalRecaudado());
+                case 7 -> pv.verEstadoPrestamoView();
+                case 8 -> gr.activos();
                 case 0 -> System.out.println("Volviendo...");
             }
 
