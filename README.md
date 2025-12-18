@@ -1,4 +1,10 @@
-# CrediYa – Sistema de Gestión de Préstamos
+https://app.gitbook.com/invite/loNlWVguyK9yCvHoU6kH/HIiDEonPMtXSKzwJZdb5
+
+
+
+
+
+[# CrediYa – Sistema de Gestión de Préstamos
 
 **CrediYa** es una aplicación desarrollada en **Java** que permite la gestión de **clientes, empleados, préstamos y pagos**, utilizando una arquitectura en capas basada en **DAO + Service**, con persistencia en **MySQL** y **archivos de texto**.
 
@@ -157,3 +163,4 @@ com.crediya.app.Main
 - Programación contra interfaces
 - Arquitectura mantenible y escalable
 
+](https://app.gitbook.com/invite/loNlWVguyK9yCvHoU6kH/HIiDEonPMtXSKzwJZdb5)
