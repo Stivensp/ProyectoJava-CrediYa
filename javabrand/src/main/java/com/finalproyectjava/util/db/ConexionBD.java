@@ -25,3 +25,22 @@ public class ConexionBD {
         }
     }
 }
+/*
+Connection con = null;
+
+try {
+    con = DriverManager.getConnection(url, user, pass);
+    // usar la conexión
+} catch (SQLException e) {
+    System.out.println("Error de conexión");
+} finally {
+    try {
+        if (con != null) {
+            con.close(); // 🔑 MUY IMPORTANTE
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al cerrar conexión");
+    }
+}
+
+*/
