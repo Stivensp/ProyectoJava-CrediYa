@@ -43,31 +43,21 @@ public class MenuPrincipalView extends MenuBaseView {
 
     //  CONSTRUCTOR
     public MenuPrincipalView() {
-
-        //  Pago primero
-        pagoService = new PagoService(pagoDAO);
-
-        // Prestamo necesita PagoService
-        prestamoService = new PrestamoService(prestamoDAO, pagoService);
-
-        //  Cliente necesita PrestamoService
-        clienteService = new ClienteService(clienteDAO, prestamoService);
-
-        // Otros services
-        empleadoService = new EmpleadoService(empleadoDAO);
-        reporteService = new ReporteService(
-                prestamoService,
-                pagoService,
-                clienteService,
-                empleadoService
-        );
-
-        //  Views
-        rv = new ReporteView(reporteService);
-        ev = new EmpleadoView(empleadoService);
-        cv = new ClienteView(clienteService, prestamoService);
-        pv = new PrestamoView(prestamoService, clienteService, empleadoService);
-        pagoV = new PagoView(pagoService, prestamoService);
+    //  Pago primero
+    pagoService = new PagoService(pagoDAO);
+    // Prestamo necesita PagoService
+    prestamoService = new PrestamoService(prestamoDAO, pagoService);
+    //  Cliente necesita PrestamoService
+    clienteService = new ClienteService(clienteDAO, prestamoService);
+    // Otros services
+    empleadoService = new EmpleadoService(empleadoDAO);
+    reporteService = new ReporteService(prestamoService,pagoService,clienteService,empleadoService);
+    //  Views
+    rv = new ReporteView(reporteService);
+    ev = new EmpleadoView(empleadoService);
+    cv = new ClienteView(clienteService, prestamoService);
+    pv = new PrestamoView(prestamoService, clienteService, empleadoService);
+    pagoV = new PagoView(pagoService, prestamoService);
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.finalproyectjava.dao.interfaces.EmpleadoDAO;
 import com.finalproyectjava.model.Empleado;
-import com.finalproyectjava.util.ConexionBD;
+import com.finalproyectjava.util.db.ConexionBD;
 
 public class EmpleadoDAOImpl implements EmpleadoDAO {
 

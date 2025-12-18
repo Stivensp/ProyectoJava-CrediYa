@@ -3,48 +3,88 @@ package com.finalproyectjava.service;
 import java.util.List;
 
 import com.finalproyectjava.dao.interfaces.EmpleadoDAO;
+import com.finalproyectjava.exceptions.EmpleadoNoEncontradoException;
+import com.finalproyectjava.exceptions.ValidacionException;
 import com.finalproyectjava.model.Empleado;
 
 public class EmpleadoService {
-    private final EmpleadoDAO empleadoDAO;
 
+    private final EmpleadoDAO empleadoDAO;
 
     public EmpleadoService(EmpleadoDAO empleadoDAO) {
         this.empleadoDAO = empleadoDAO;
     }
 
-    // Método Registrar
-    public Empleado registrarEmpleado(String nombre, String documento, String rol, String correo, Double salario) {
-        Empleado empleado = new Empleado(0, nombre, documento, rol, correo, salario); 
+    public Empleado registrarEmpleado(String nombre, String documento, String rol,
+                                     String correo, Double salario)
+            throws ValidacionException {
+
+        if (nombre == null || nombre.isBlank()) {
+            throw new ValidacionException("El nombre no puede estar vacío");
+        }
+
+        if (documento == null || documento.isBlank()) {
+            throw new ValidacionException("El documento no puede estar vacío");
+        }
+
+        if (salario == null || salario <= 0) {
+            throw new ValidacionException("El salario debe ser mayor a 0");
+        }
+
+        Empleado empleado = new Empleado(0, nombre, documento, rol, correo, salario);
         return empleadoDAO.registrarEmpleadoDAO(empleado);
     }
 
-
     public List<Empleado> listaEmpleados() {
-        return empleadoDAO.listaEmpleadosDAO(); 
+        return empleadoDAO.listaEmpleadosDAO();
     }
 
+    public Empleado buscarEmpleadoId(int id)
+            throws EmpleadoNoEncontradoException {
 
-    public Empleado buscarEmpleadoId(int id) {
-        return empleadoDAO.buscarEmpleadoIdDAO(id);
-    }
+        Empleado empleado = empleadoDAO.buscarEmpleadoIdDAO(id);
 
-
-    public Empleado actualizarEmpleado(int id, String nombre, String documento, String rol, String correo, Double salario) {
-        Empleado e = empleadoDAO.buscarEmpleadoIdDAO(id); 
-        if (e != null) {
-            e.setNombre(nombre);
-            e.setDocumento(documento);
-            e.setRol(rol);
-            e.setCorreo(correo);
-            e.setSalario(salario);
-            empleadoDAO.actualizarEmpleadoDAO(e); 
+        if (empleado == null) {
+            throw new EmpleadoNoEncontradoException(
+                "No se encontró el empleado con ID: " + id
+            );
         }
-        return e;
+
+        return empleado;
     }
 
-    // Eliminar Empleado
-    public Boolean eliminarEmpleado(int id) {
-        return empleadoDAO.eliminarEmpleadoDAO(id); 
+    public Empleado actualizarEmpleado(int id, String nombre, String documento,
+                                      String rol, String correo, Double salario)
+            throws EmpleadoNoEncontradoException, ValidacionException {
+
+        Empleado empleado = buscarEmpleadoId(id);
+
+        if (nombre == null || nombre.isBlank()) {
+            throw new ValidacionException("El nombre no puede estar vacío");
+        }
+
+        if (documento == null || documento.isBlank()) {
+            throw new ValidacionException("El documento no puede estar vacío");
+        }
+
+        if (salario == null || salario <= 0) {
+            throw new ValidacionException("El salario debe ser mayor a 0");
+        }
+
+        empleado.setNombre(nombre);
+        empleado.setDocumento(documento);
+        empleado.setRol(rol);
+        empleado.setCorreo(correo);
+        empleado.setSalario(salario);
+
+        empleadoDAO.actualizarEmpleadoDAO(empleado);
+        return empleado;
+    }
+
+    public void eliminarEmpleado(int id)
+            throws EmpleadoNoEncontradoException {
+
+        buscarEmpleadoId(id);
+        empleadoDAO.eliminarEmpleadoDAO(id);
     }
 }

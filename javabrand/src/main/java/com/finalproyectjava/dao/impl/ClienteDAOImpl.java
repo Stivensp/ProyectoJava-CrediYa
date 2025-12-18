@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.finalproyectjava.dao.interfaces.ClienteDAO;
 import com.finalproyectjava.model.Cliente;
-import com.finalproyectjava.util.ConexionBD;
+import com.finalproyectjava.util.db.ConexionBD;
 
 public class ClienteDAOImpl implements ClienteDAO {
 

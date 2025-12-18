@@ -1,4 +1,4 @@
-package com.finalproyectjava.util;
+package com.finalproyectjava.util.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

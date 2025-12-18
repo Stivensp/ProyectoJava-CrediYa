@@ -5,18 +5,17 @@ USE crediya_db;
 
 CREATE TABLE empleados (
 
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY, 
 
-  nombre VARCHAR(80),
+  nombre VARCHAR(80), 
 
   documento VARCHAR(30),
+  
+  correo VARCHAR(80),
 
   rol VARCHAR(30),
 
-  correo VARCHAR(80),
-
   salario DECIMAL(10,2)
-
 );
 
 

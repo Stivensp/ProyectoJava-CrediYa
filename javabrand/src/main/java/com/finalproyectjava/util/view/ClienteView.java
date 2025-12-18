@@ -2,6 +2,9 @@ package com.finalproyectjava.util.view;
 
 import java.util.List;
 
+import com.finalproyectjava.exceptions.ClienteNoEncontradoException;
+import com.finalproyectjava.exceptions.OperacionNoPermitidaException;
+import com.finalproyectjava.exceptions.ValidacionException;
 import com.finalproyectjava.model.Cliente;
 import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.service.ClienteService;
@@ -11,12 +14,10 @@ public class ClienteView extends MenuBaseView {
 
     private final ClienteService cs;
 
-    // Constructor
     public ClienteView(ClienteService cs, PrestamoService ps) {
         this.cs = cs;
     }
 
-    // Menú principal
     @Override
     public void play() {
         int opcion;
@@ -52,22 +53,25 @@ public class ClienteView extends MenuBaseView {
         } while (opcion != 0);
     }
 
-    // Registrar cliente
     private void registrarClienteView() {
         consola.nextLine();
+        try {
+            String nombre = leerTexto("Nombre:");
+            String documento = leerTexto("Documento:");
+            String correo = leerCorreo("Correo:");
+            String telefono = leerTelefono("Teléfono:");
 
-        String nombre = leerTexto("Nombre:");
-        String documento = leerTexto("Documento:");
-        String correo = leerCorreo("Correo:");
-        String telefono = leerTelefono("Teléfono:");
+            cs.registrarCliente(nombre, documento, correo, telefono);
+            System.out.println("Cliente registrado correctamente");
 
-        cs.registrarCliente(nombre, documento, correo, telefono);
-        System.out.println("Cliente registrado correctamente");
+        } catch (ValidacionException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
-    // Listar clientes
     private void listarClientesView() {
         List<Cliente> clientes = cs.listaClientes();
+
         if (clientes.isEmpty()) {
             System.out.println("No hay clientes registrados.");
             return;
@@ -76,55 +80,64 @@ public class ClienteView extends MenuBaseView {
         clientes.forEach(System.out::println);
     }
 
-    // Buscar cliente por ID
     private void buscarClienteIdView() {
         int id = leerEntero("Ingrese ID del cliente:", 1);
 
-        Cliente c = cs.buscarClienteId(id);
-        if (c == null) {
-            System.out.println("Cliente no encontrado.");
-            return;
-        }
+        try {
+            Cliente c = cs.buscarClienteId(id);
+            System.out.println(c);
 
-        System.out.println(c);
+        } catch (ClienteNoEncontradoException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
-    // Actualizar cliente
     private void actualizarClienteView() {
         int id = leerEntero("Ingrese ID del cliente:", 1);
         consola.nextLine();
 
-        String nombre = leerTexto("Nuevo nombre:");
-        String documento = leerTexto("Nuevo documento:");
-        String correo = leerCorreo("Nuevo correo:");
-        String telefono = leerTelefono("Nuevo teléfono:");
+        try {
+            String nombre = leerTexto("Nuevo nombre:");
+            String documento = leerTexto("Nuevo documento:");
+            String correo = leerCorreo("Nuevo correo:");
+            String telefono = leerTelefono("Nuevo teléfono:");
 
-        cs.actualizarCliente(id, nombre, documento, correo, telefono);
-        System.out.println("Cliente actualizado correctamente.");
+            cs.actualizarCliente(id, nombre, documento, correo, telefono);
+            System.out.println("Cliente actualizado correctamente.");
+
+        } catch (ClienteNoEncontradoException | ValidacionException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
-    // Eliminar cliente
     private void eliminarClienteView() {
         int id = leerEntero("Ingrese ID del cliente:", 1);
 
-        if (cs.eliminarCliente(id)) {
+        try {
+            cs.eliminarCliente(id);
             System.out.println("Cliente eliminado.");
-        } else {
-            System.out.println("Cliente no encontrado.");
+
+        } catch (ClienteNoEncontradoException | OperacionNoPermitidaException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    // Mostrar préstamos del cliente
     private void prestamosClienteView() {
         int id = leerEntero("Ingrese ID del cliente:", 1);
 
-        List<Prestamo> prestamos = cs.prestamosCliente(id);
-        if (prestamos.isEmpty()) {
-            System.out.println("El cliente no tiene préstamos o no existe.");
-            return;
-        }
+        try {
+            List<Prestamo> prestamos = cs.prestamosCliente(id);
 
-        prestamos.forEach(System.out::println);
+            if (prestamos.isEmpty()) {
+                System.out.println("El cliente no tiene préstamos.");
+                return;
+            }
+
+            prestamos.forEach(System.out::println);
+
+        } catch (ClienteNoEncontradoException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     // VALIDACIONES 

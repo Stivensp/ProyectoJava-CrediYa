@@ -2,6 +2,8 @@ package com.finalproyectjava.util.view;
 
 import java.util.List;
 
+import com.finalproyectjava.exceptions.EmpleadoNoEncontradoException;
+import com.finalproyectjava.exceptions.ValidacionException;
 import com.finalproyectjava.model.Empleado;
 import com.finalproyectjava.service.EmpleadoService;
 
@@ -9,12 +11,10 @@ public class EmpleadoView extends MenuBaseView {
 
     private final EmpleadoService e;
 
-    // Constructor
     public EmpleadoView(EmpleadoService e) {
         this.e = e;
     }
 
-    // Menú principal
     @Override
     public void play() {
         int opcion;
@@ -50,71 +50,72 @@ public class EmpleadoView extends MenuBaseView {
         } while (opcion != 0);
     }
 
-    // Registrar empleado
     private void registrarEmpleadoView() {
         consola.nextLine();
+        try {
+            String nombre = leerTexto("Nombre:");
+            String documento = leerTexto("Documento:");
+            String rol = leerTexto("Rol:");
+            String correo = leerCorreo("Correo:");
+            double salario = leerDouble("Salario:", 0);
 
-        String nombre = leerTexto("Nombre:");
-        String documento = leerTexto("Documento:");
-        String rol = leerTexto("Rol:");
-        String correo = leerCorreo("Correo:");
-        double salario = leerDouble("Salario:", 0);
+            e.registrarEmpleado(nombre, documento, rol, correo, salario);
+            System.out.println("Empleado registrado correctamente.");
 
-        e.registrarEmpleado(nombre, documento, rol, correo, salario);
-        System.out.println("Empleado registrado correctamente.");
+        } catch (ValidacionException ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
     }
 
-    // Listar empleados
     private void listarEmpleadosView() {
         List<Empleado> empleados = e.listaEmpleados();
         if (empleados.isEmpty()) {
             System.out.println("No hay empleados registrados.");
             return;
         }
-
         empleados.forEach(System.out::println);
     }
 
-    // Buscar empleado por ID
     private void buscarEmpleadoIdView() {
         int id = leerEntero("Ingrese ID del empleado:", 1);
-
-        Empleado em = e.buscarEmpleadoId(id);
-        if (em == null) {
-            System.out.println("Empleado no encontrado.");
-            return;
+        try {
+            Empleado em = e.buscarEmpleadoId(id);
+            System.out.println(em);
+        } catch (EmpleadoNoEncontradoException ex) {
+            System.out.println("Error: " + ex.getMessage());
         }
-
-        System.out.println(em);
     }
 
-    // Actualizar empleado
     private void actualizarEmpleadoView() {
         int id = leerEntero("Ingrese ID del empleado:", 1);
         consola.nextLine();
 
-        String nombre = leerTexto("Nuevo nombre:");
-        String documento = leerTexto("Nuevo documento:");
-        String rol = leerTexto("Nuevo rol:");
-        String correo = leerCorreo("Nuevo correo:");
-        double salario = leerDouble("Nuevo salario:", 0);
+        try {
+            String nombre = leerTexto("Nuevo nombre:");
+            String documento = leerTexto("Nuevo documento:");
+            String rol = leerTexto("Nuevo rol:");
+            String correo = leerCorreo("Nuevo correo:");
+            double salario = leerDouble("Nuevo salario:", 0);
 
-        e.actualizarEmpleado(id, nombre, documento, rol, correo, salario);
-        System.out.println("Empleado actualizado correctamente.");
-    }
+            e.actualizarEmpleado(id, nombre, documento, rol, correo, salario);
+            System.out.println("Empleado actualizado correctamente.");
 
-    // Eliminar empleado
-    private void eliminarEmpleadoView() {
-        int id = leerEntero("Ingrese ID del empleado:", 1);
-
-        if (e.eliminarEmpleado(id)) {
-            System.out.println("Empleado eliminado.");
-        } else {
-            System.out.println("Empleado no encontrado.");
+        } catch (EmpleadoNoEncontradoException | ValidacionException ex) {
+            System.out.println("Error: " + ex.getMessage());
         }
     }
 
-    //  VALIDACIONES
+    private void eliminarEmpleadoView() {
+        int id = leerEntero("Ingrese ID del empleado:", 1);
+        try {
+            e.eliminarEmpleado(id);
+            System.out.println("Empleado eliminado correctamente.");
+        } catch (EmpleadoNoEncontradoException ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
+    }
+
+    // VALIDACIONES 
 
     private int leerEntero(String mensaje, int min) {
         int valor;

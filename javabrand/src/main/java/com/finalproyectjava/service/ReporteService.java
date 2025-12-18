@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.finalproyectjava.exceptions.EmpleadoNoEncontradoException;
+import com.finalproyectjava.exceptions.PrestamoNoEncontradoException;
 import com.finalproyectjava.model.Cliente;
 import com.finalproyectjava.model.Empleado;
 import com.finalproyectjava.model.Pago;
@@ -12,80 +14,101 @@ import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.model.Prestamo.EstadoPrestamo;
 
 public class ReporteService {
-    //Atributos
+
     private final PrestamoService prestamoService;
     private final PagoService pagoService;
     private final ClienteService clienteService;
     private final EmpleadoService empleadoService;
 
-    public ReporteService( PrestamoService ps, PagoService pags, ClienteService cs, EmpleadoService es) {
+    public ReporteService(PrestamoService ps, PagoService pags,
+                           ClienteService cs, EmpleadoService es) {
         this.prestamoService = ps;
         this.pagoService = pags;
         this.clienteService = cs;
         this.empleadoService = es;
     }
-    //Préstamos activos (estado = pendiente)
+
     public List<Prestamo> prestamosActivos() {
-    return prestamoService.listaPrestamo()
-        .stream()
-        .filter(p -> p.getEstado() == EstadoPrestamo.PENDIENTE)
-        .toList();
+        return prestamoService.listaPrestamo()
+                .stream()
+                .filter(p -> p.getEstado() == EstadoPrestamo.PENDIENTE)
+                .toList();
     }
-    // Préstamos pagados
+
     public List<Prestamo> prestamosPagados() {
-    return prestamoService.listaPrestamo()
-        .stream()
-        .filter(p -> p.getEstado() == EstadoPrestamo.PAGADO)
-        .toList();
+        return prestamoService.listaPrestamo()
+                .stream()
+                .filter(p -> p.getEstado() == EstadoPrestamo.PAGADO)
+                .toList();
     }
-    // Préstamos vencidos (fecha + cuotas)
+
     public List<Prestamo> prestamosVencidos() {
         LocalDate hoy = LocalDate.now();
 
         return prestamoService.listaPrestamo()
-            .stream()
-            .filter(p -> {
-                LocalDate fin = p.getFechaInicio().plusMonths(p.getCuotas());
-                return hoy.isAfter(fin) && p.getEstado() == EstadoPrestamo.PENDIENTE;
-            })
-            .toList();
+                .stream()
+                .filter(p -> {
+                    LocalDate fin = p.getFechaInicio().plusMonths(p.getCuotas());
+                    return hoy.isAfter(fin) && p.getEstado() == EstadoPrestamo.PENDIENTE;
+                })
+                .toList();
     }
-    // Clientes morosos (saldo > 0)
+
     public List<Cliente> clientesMorosos() {
+
+        List<Prestamo> prestamos = prestamoService.listaPrestamo();
+        List<Pago> pagos = pagoService.listaPagos();
+
         return clienteService.listaClientes()
-            .stream()
-            .filter(c -> {
-                double totalPrestamos = prestamoService.listaPrestamo().stream()
-                    .filter(p -> p.getClienteId() == c.getId())
-                    .mapToDouble(p -> p.getValorCuota() * p.getCuotas())
-                    .sum();
+                .stream()
+                .filter(c -> {
 
-                double totalPagado = pagoService.listaPagos().stream()
-                    .filter(p -> prestamoService.buscarPrestamoId(p.getPrestamoId())
-                            .getClienteId() == c.getId())
-                    .mapToDouble(Pago::getMonto)
-                    .sum();
+                    double totalPrestamos = prestamos.stream()
+                            .filter(p -> p.getClienteId() == c.getId())
+                            .mapToDouble(p -> p.getValorCuota() * p.getCuotas())
+                            .sum();
 
-                return totalPagado < totalPrestamos;
-            })
-            .toList();
+                    double totalPagado = pagos.stream()
+                            .filter(p -> {
+                                try {
+                                    return prestamoService
+                                            .buscarPrestamoId(p.getPrestamoId())
+                                            .getClienteId() == c.getId();
+                                } catch (PrestamoNoEncontradoException e) {
+                                    return false;
+                                }
+                            })
+                            .mapToDouble(Pago::getMonto)
+                            .sum();
+
+                    return totalPagado < totalPrestamos;
+                })
+                .toList();
     }
-    // Empleados con mas prestamos otorgados
+
     public Map<Empleado, Long> empleadosConMasPrestamos() {
-        return prestamoService.listaPrestamo()
-            .stream()
-            .collect(Collectors.groupingBy(
-                p -> empleadoService.buscarEmpleadoId(p.getEmpleadoId()),
-                Collectors.counting()
-            ));
+
+        List<Prestamo> prestamos = prestamoService.listaPrestamo();
+
+        return prestamos.stream()
+                .map(p -> {
+                    try {
+                        return empleadoService.buscarEmpleadoId(p.getEmpleadoId());
+                    } catch (EmpleadoNoEncontradoException e) {
+                        return null;
+                    }
+                })
+                .filter(e -> e != null)
+                .collect(Collectors.groupingBy(
+                        e -> e,
+                        Collectors.counting()
+                ));
     }
-        
-    // Total recaudado por pagos
+
     public double totalRecaudado() {
         return pagoService.listaPagos()
-            .stream()
-            .mapToDouble(Pago::getMonto)
-            .sum();
+                .stream()
+                .mapToDouble(Pago::getMonto)
+                .sum();
     }
-
 }

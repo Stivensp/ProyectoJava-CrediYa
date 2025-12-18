@@ -11,7 +11,7 @@ import java.util.List;
 import com.finalproyectjava.dao.interfaces.PrestamoDAO;
 import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.model.Prestamo.EstadoPrestamo;
-import com.finalproyectjava.util.ConexionBD;
+import com.finalproyectjava.util.db.ConexionBD;
 
 public class PrestamoDAOImpl implements PrestamoDAO {
 

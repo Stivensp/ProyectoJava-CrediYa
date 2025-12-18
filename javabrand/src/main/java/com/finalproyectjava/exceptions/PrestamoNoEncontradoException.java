@@ -1,6 +1,7 @@
 package com.finalproyectjava.exceptions;
 
-public class PrestamoNoEncontradoException extends Exception {
+public class PrestamoNoEncontradoException extends RuntimeException {
+
     public PrestamoNoEncontradoException(String mensaje) {
         super(mensaje);
     }

@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.finalproyectjava.dao.interfaces.PagoDAO;
 import com.finalproyectjava.model.Pago;
-import com.finalproyectjava.util.ConexionBD;
+import com.finalproyectjava.util.db.ConexionBD;
 
 public class PagoDAOImpl implements PagoDAO {
 
