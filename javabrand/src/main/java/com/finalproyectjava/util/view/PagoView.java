@@ -3,15 +3,15 @@ package com.finalproyectjava.util.view;
 import java.util.List;
 
 import com.finalproyectjava.model.Pago;
-import com.finalproyectjava.service.PagoService;
-import com.finalproyectjava.service.PrestamoService;
+import com.finalproyectjava.service.impl.PagoServiceImpl;
+import com.finalproyectjava.service.impl.PrestamoServiceImpl;
 
 public class PagoView extends MenuBaseView {
 
-    private final PagoService pagoS;
+    private final PagoServiceImpl pagoS;
 
     // Constructor
-    public PagoView(PagoService pagoS, PrestamoService ps) {
+    public PagoView(PagoServiceImpl pagoS, PrestamoServiceImpl ps) {
         this.pagoS = pagoS;
     }
 
@@ -58,7 +58,7 @@ public class PagoView extends MenuBaseView {
 
     // Listar todos los pagos
     private void listarPagosView() {
-        List<Pago> pagos = pagoS.listaPagos();
+        List<Pago> pagos = pagoS.listarPagos();
 
         if (pagos.isEmpty()) {
             System.out.println("No hay pagos registrados.");
@@ -72,7 +72,7 @@ public class PagoView extends MenuBaseView {
     private void pagosPorPrestamoView() {
         int prestamoId = leerEntero("Ingrese ID del préstamo:", 1);
 
-        List<Pago> pagos = pagoS.pagoPorPrestamo(prestamoId);
+        List<Pago> pagos = pagoS.pagosPorPrestamo(prestamoId);
 
         if (pagos.isEmpty()) {
             System.out.println("No existen pagos para este préstamo.");

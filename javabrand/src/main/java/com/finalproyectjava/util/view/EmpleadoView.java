@@ -5,13 +5,13 @@ import java.util.List;
 import com.finalproyectjava.exceptions.EmpleadoNoEncontradoException;
 import com.finalproyectjava.exceptions.ValidacionException;
 import com.finalproyectjava.model.Empleado;
-import com.finalproyectjava.service.EmpleadoService;
+import com.finalproyectjava.service.impl.EmpleadoServiceImpl;
 
 public class EmpleadoView extends MenuBaseView {
 
-    private final EmpleadoService e;
+    private final EmpleadoServiceImpl e;
 
-    public EmpleadoView(EmpleadoService e) {
+    public EmpleadoView(EmpleadoServiceImpl e) {
         this.e = e;
     }
 
@@ -68,7 +68,7 @@ public class EmpleadoView extends MenuBaseView {
     }
 
     private void listarEmpleadosView() {
-        List<Empleado> empleados = e.listaEmpleados();
+        List<Empleado> empleados = e.listarEmpleados();
         if (empleados.isEmpty()) {
             System.out.println("No hay empleados registrados.");
             return;

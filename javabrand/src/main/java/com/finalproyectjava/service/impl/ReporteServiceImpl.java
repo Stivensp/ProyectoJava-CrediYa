@@ -1,4 +1,4 @@
-package com.finalproyectjava.service;
+package com.finalproyectjava.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,22 +12,28 @@ import com.finalproyectjava.model.Empleado;
 import com.finalproyectjava.model.Pago;
 import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.model.Prestamo.EstadoPrestamo;
+import com.finalproyectjava.service.serviceInterfaces.IClienteService;
+import com.finalproyectjava.service.serviceInterfaces.IEmpleadoService;
+import com.finalproyectjava.service.serviceInterfaces.IPagoService;
+import com.finalproyectjava.service.serviceInterfaces.IPrestamoService;
+import com.finalproyectjava.service.serviceInterfaces.IReporteService;
 
-public class ReporteService {
+public class ReporteServiceImpl implements IReporteService {
 
-    private final PrestamoService prestamoService;
-    private final PagoService pagoService;
-    private final ClienteService clienteService;
-    private final EmpleadoService empleadoService;
+    private final IPrestamoService prestamoService;
+    private final IPagoService pagoService;
+    private final IClienteService clienteService;
+    private final IEmpleadoService empleadoService;
 
-    public ReporteService(PrestamoService ps, PagoService pags,
-                           ClienteService cs, EmpleadoService es) {
+    public ReporteServiceImpl(IPrestamoService ps, IPagoService pagos,
+                              IClienteService cs, IEmpleadoService es) {
         this.prestamoService = ps;
-        this.pagoService = pags;
+        this.pagoService = pagos;
         this.clienteService = cs;
         this.empleadoService = es;
     }
 
+    @Override
     public List<Prestamo> prestamosActivos() {
         return prestamoService.listaPrestamo()
                 .stream()
@@ -35,6 +41,7 @@ public class ReporteService {
                 .toList();
     }
 
+    @Override
     public List<Prestamo> prestamosPagados() {
         return prestamoService.listaPrestamo()
                 .stream()
@@ -42,6 +49,7 @@ public class ReporteService {
                 .toList();
     }
 
+    @Override
     public List<Prestamo> prestamosVencidos() {
         LocalDate hoy = LocalDate.now();
 
@@ -54,12 +62,12 @@ public class ReporteService {
                 .toList();
     }
 
+    @Override
     public List<Cliente> clientesMorosos() {
-
         List<Prestamo> prestamos = prestamoService.listaPrestamo();
-        List<Pago> pagos = pagoService.listaPagos();
+        List<Pago> pagos = pagoService.listarPagos();
 
-        return clienteService.listaClientes()
+        return clienteService.listarClientes()
                 .stream()
                 .filter(c -> {
 
@@ -86,11 +94,10 @@ public class ReporteService {
                 .toList();
     }
 
+    @Override
     public Map<Empleado, Long> empleadosConMasPrestamos() {
-
-        List<Prestamo> prestamos = prestamoService.listaPrestamo();
-
-        return prestamos.stream()
+        return prestamoService.listaPrestamo()
+                .stream()
                 .map(p -> {
                     try {
                         return empleadoService.buscarEmpleadoId(p.getEmpleadoId());
@@ -99,14 +106,12 @@ public class ReporteService {
                     }
                 })
                 .filter(e -> e != null)
-                .collect(Collectors.groupingBy(
-                        e -> e,
-                        Collectors.counting()
-                ));
+                .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
     }
 
+    @Override
     public double totalRecaudado() {
-        return pagoService.listaPagos()
+        return pagoService.listarPagos()
                 .stream()
                 .mapToDouble(Pago::getMonto)
                 .sum();

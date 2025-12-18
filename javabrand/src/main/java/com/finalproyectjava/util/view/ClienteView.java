@@ -7,14 +7,14 @@ import com.finalproyectjava.exceptions.OperacionNoPermitidaException;
 import com.finalproyectjava.exceptions.ValidacionException;
 import com.finalproyectjava.model.Cliente;
 import com.finalproyectjava.model.Prestamo;
-import com.finalproyectjava.service.ClienteService;
-import com.finalproyectjava.service.PrestamoService;
+import com.finalproyectjava.service.impl.ClienteServiceImpl;
+import com.finalproyectjava.service.impl.PrestamoServiceImpl;
 
 public class ClienteView extends MenuBaseView {
 
-    private final ClienteService cs;
+    private final ClienteServiceImpl cs;
 
-    public ClienteView(ClienteService cs, PrestamoService ps) {
+    public ClienteView(ClienteServiceImpl cs, PrestamoServiceImpl ps) {
         this.cs = cs;
     }
 
@@ -70,7 +70,7 @@ public class ClienteView extends MenuBaseView {
     }
 
     private void listarClientesView() {
-        List<Cliente> clientes = cs.listaClientes();
+        List<Cliente> clientes = cs.listarClientes();
 
         if (clientes.isEmpty()) {
             System.out.println("No hay clientes registrados.");

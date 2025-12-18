@@ -6,13 +6,13 @@ import java.util.Map;
 import com.finalproyectjava.model.Cliente;
 import com.finalproyectjava.model.Empleado;
 import com.finalproyectjava.model.Prestamo;
-import com.finalproyectjava.service.ReporteService;
+import com.finalproyectjava.service.impl.ReporteServiceImpl;
 
 public class ReporteView extends MenuBaseView {
 
-    private final ReporteService rs;
+    private final ReporteServiceImpl rs;
 
-    public ReporteView(ReporteService rs) {
+    public ReporteView(ReporteServiceImpl rs) {
         this.rs = rs;
     }
 

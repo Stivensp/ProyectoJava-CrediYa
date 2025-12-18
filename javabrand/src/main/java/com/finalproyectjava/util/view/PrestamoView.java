@@ -2,15 +2,15 @@ package com.finalproyectjava.util.view;
 
 import com.finalproyectjava.model.Prestamo;
 import com.finalproyectjava.model.Prestamo.EstadoPrestamo;
-import com.finalproyectjava.service.ClienteService;
-import com.finalproyectjava.service.EmpleadoService;
-import com.finalproyectjava.service.PrestamoService;
+import com.finalproyectjava.service.impl.ClienteServiceImpl;
+import com.finalproyectjava.service.impl.EmpleadoServiceImpl;
+import com.finalproyectjava.service.impl.PrestamoServiceImpl;
 
 public class PrestamoView extends MenuBaseView {
 
-    private final PrestamoService ps;
+    private final PrestamoServiceImpl ps;
 
-    public PrestamoView(PrestamoService ps, ClienteService cs, EmpleadoService es) {
+    public PrestamoView(PrestamoServiceImpl ps, ClienteServiceImpl cs, EmpleadoServiceImpl es) {
         this.ps = ps;
     }
 

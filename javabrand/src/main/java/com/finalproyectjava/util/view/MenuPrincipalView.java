@@ -10,11 +10,11 @@ import com.finalproyectjava.dao.interfaces.ClienteDAO;
 import com.finalproyectjava.dao.interfaces.EmpleadoDAO;
 import com.finalproyectjava.dao.interfaces.PagoDAO;
 import com.finalproyectjava.dao.interfaces.PrestamoDAO;
-import com.finalproyectjava.service.ClienteService;
-import com.finalproyectjava.service.EmpleadoService;
-import com.finalproyectjava.service.PagoService;
-import com.finalproyectjava.service.PrestamoService;
-import com.finalproyectjava.service.ReporteService;
+import com.finalproyectjava.service.impl.ClienteServiceImpl;
+import com.finalproyectjava.service.impl.EmpleadoServiceImpl;
+import com.finalproyectjava.service.impl.PagoServiceImpl;
+import com.finalproyectjava.service.impl.PrestamoServiceImpl;
+import com.finalproyectjava.service.impl.ReporteServiceImpl;
 
 public class MenuPrincipalView extends MenuBaseView {
 
@@ -28,11 +28,11 @@ public class MenuPrincipalView extends MenuBaseView {
     );
 
     //  SERVICES 
-    private final EmpleadoService empleadoService;
-    private final ClienteService clienteService;
-    private final PrestamoService prestamoService;
-    private final PagoService pagoService;
-    private final ReporteService reporteService;
+    private final EmpleadoServiceImpl empleadoService;
+    private final ClienteServiceImpl clienteService;
+    private final PrestamoServiceImpl prestamoService;
+    private final PagoServiceImpl pagoService;
+    private final ReporteServiceImpl reporteService;
 
     //  VIEWS
     private final ReporteView rv;
@@ -44,14 +44,14 @@ public class MenuPrincipalView extends MenuBaseView {
     //  CONSTRUCTOR
     public MenuPrincipalView() {
     //  Pago primero
-    pagoService = new PagoService(pagoDAO);
+    pagoService = new PagoServiceImpl(pagoDAO);
     // Prestamo necesita PagoService
-    prestamoService = new PrestamoService(prestamoDAO, pagoService);
+    prestamoService = new PrestamoServiceImpl(prestamoDAO, pagoService);
     //  Cliente necesita PrestamoService
-    clienteService = new ClienteService(clienteDAO, prestamoService);
+    clienteService = new ClienteServiceImpl(clienteDAO, prestamoService);
     // Otros services
-    empleadoService = new EmpleadoService(empleadoDAO);
-    reporteService = new ReporteService(prestamoService,pagoService,clienteService,empleadoService);
+    empleadoService = new EmpleadoServiceImpl(empleadoDAO);
+    reporteService = new ReporteServiceImpl(prestamoService,pagoService,clienteService,empleadoService);
     //  Views
     rv = new ReporteView(reporteService);
     ev = new EmpleadoView(empleadoService);

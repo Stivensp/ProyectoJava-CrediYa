@@ -1,4 +1,4 @@
-package com.finalproyectjava.service;
+package com.finalproyectjava.service.impl;
 
 import java.util.List;
 
@@ -6,17 +6,19 @@ import com.finalproyectjava.dao.interfaces.EmpleadoDAO;
 import com.finalproyectjava.exceptions.EmpleadoNoEncontradoException;
 import com.finalproyectjava.exceptions.ValidacionException;
 import com.finalproyectjava.model.Empleado;
+import com.finalproyectjava.service.serviceInterfaces.IEmpleadoService;
 
-public class EmpleadoService {
+public class EmpleadoServiceImpl implements IEmpleadoService {
 
     private final EmpleadoDAO empleadoDAO;
 
-    public EmpleadoService(EmpleadoDAO empleadoDAO) {
+    public EmpleadoServiceImpl(EmpleadoDAO empleadoDAO) {
         this.empleadoDAO = empleadoDAO;
     }
 
+    @Override
     public Empleado registrarEmpleado(String nombre, String documento, String rol,
-                                     String correo, Double salario)
+                                      String correo, Double salario)
             throws ValidacionException {
 
         if (nombre == null || nombre.isBlank()) {
@@ -35,26 +37,25 @@ public class EmpleadoService {
         return empleadoDAO.registrarEmpleadoDAO(empleado);
     }
 
-    public List<Empleado> listaEmpleados() {
+    @Override
+    public List<Empleado> listarEmpleados() {
         return empleadoDAO.listaEmpleadosDAO();
     }
 
-    public Empleado buscarEmpleadoId(int id)
-            throws EmpleadoNoEncontradoException {
-
+    @Override
+    public Empleado buscarEmpleadoId(int id) throws EmpleadoNoEncontradoException {
         Empleado empleado = empleadoDAO.buscarEmpleadoIdDAO(id);
 
         if (empleado == null) {
-            throw new EmpleadoNoEncontradoException(
-                "No se encontró el empleado con ID: " + id
-            );
+            throw new EmpleadoNoEncontradoException("No se encontró el empleado con ID: " + id);
         }
 
         return empleado;
     }
 
+    @Override
     public Empleado actualizarEmpleado(int id, String nombre, String documento,
-                                      String rol, String correo, Double salario)
+                                       String rol, String correo, Double salario)
             throws EmpleadoNoEncontradoException, ValidacionException {
 
         Empleado empleado = buscarEmpleadoId(id);
@@ -81,9 +82,8 @@ public class EmpleadoService {
         return empleado;
     }
 
-    public void eliminarEmpleado(int id)
-            throws EmpleadoNoEncontradoException {
-
+    @Override
+    public void eliminarEmpleado(int id) throws EmpleadoNoEncontradoException {
         buscarEmpleadoId(id);
         empleadoDAO.eliminarEmpleadoDAO(id);
     }

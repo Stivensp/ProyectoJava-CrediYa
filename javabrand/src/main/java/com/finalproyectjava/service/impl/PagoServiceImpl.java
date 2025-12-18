@@ -1,4 +1,4 @@
-package com.finalproyectjava.service;
+package com.finalproyectjava.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -8,29 +8,26 @@ import com.finalproyectjava.exceptions.MontoInvalidoException;
 import com.finalproyectjava.exceptions.PagoNoRegistradoException;
 import com.finalproyectjava.exceptions.PrestamoIdInvalidoException;
 import com.finalproyectjava.model.Pago;
+import com.finalproyectjava.service.serviceInterfaces.IPagoService;
 
-public class PagoService {
+public class PagoServiceImpl implements IPagoService {
 
     private final PagoDAO pagoDAO;
 
-    public PagoService(PagoDAO pagoDAO) {
+    public PagoServiceImpl(PagoDAO pagoDAO) {
         if (pagoDAO == null) {
             throw new IllegalArgumentException("PagoDAO no puede ser null");
         }
         this.pagoDAO = pagoDAO;
     }
 
+    @Override
     public Pago registrarPago(int prestamoId, double monto) {
 
         validarPrestamoId(prestamoId);
         validarMonto(monto);
 
-        Pago pago = new Pago(
-                0,
-                prestamoId,
-                LocalDate.now(),
-                monto
-        );
+        Pago pago = new Pago(0, prestamoId, LocalDate.now(), monto);
 
         try {
             return pagoDAO.registrarPagoDAO(pago);
@@ -39,15 +36,18 @@ public class PagoService {
         }
     }
 
-    public List<Pago> listaPagos() {
+    @Override
+    public List<Pago> listarPagos() {
         return pagoDAO.listaPagoDAO();
     }
 
-    public List<Pago> pagoPorPrestamo(int prestamoId) {
+    @Override
+    public List<Pago> pagosPorPrestamo(int prestamoId) {
         validarPrestamoId(prestamoId);
         return pagoDAO.pagoPorPrestamoDAO(prestamoId);
     }
 
+    @Override
     public double totalPagadoPorPrestamo(int prestamoId) {
         validarPrestamoId(prestamoId);
         return Math.max(0, pagoDAO.totalPagadoPorPrestamoDAO(prestamoId));

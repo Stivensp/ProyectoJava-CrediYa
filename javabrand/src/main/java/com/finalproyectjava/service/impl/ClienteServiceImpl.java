@@ -1,4 +1,4 @@
-package com.finalproyectjava.service;
+package com.finalproyectjava.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,17 +9,20 @@ import com.finalproyectjava.exceptions.OperacionNoPermitidaException;
 import com.finalproyectjava.exceptions.ValidacionException;
 import com.finalproyectjava.model.Cliente;
 import com.finalproyectjava.model.Prestamo;
+import com.finalproyectjava.service.serviceInterfaces.IClienteService;
+import com.finalproyectjava.service.serviceInterfaces.IPrestamoService;
 
-public class ClienteService {
+public class ClienteServiceImpl implements IClienteService {
 
     private final ClienteDAO clienteDAO;
-    private final PrestamoService ps;
+    private final IPrestamoService prestamoService;
 
-    public ClienteService(ClienteDAO clienteDAO, PrestamoService ps) {
+    public ClienteServiceImpl(ClienteDAO clienteDAO, IPrestamoService prestamoService) {
         this.clienteDAO = clienteDAO;
-        this.ps = ps;
+        this.prestamoService = prestamoService;
     }
 
+    @Override
     public Cliente registrarCliente(String nombre, String documento, String correo, String telefono)
             throws ValidacionException {
 
@@ -35,25 +38,24 @@ public class ClienteService {
         return clienteDAO.registrarClienteDAO(cliente);
     }
 
-    public List<Cliente> listaClientes() {
+    @Override
+    public List<Cliente> listarClientes() {
         return clienteDAO.listaClientesDAO();
     }
 
+    @Override
     public Cliente buscarClienteId(int id) throws ClienteNoEncontradoException {
-
         Cliente cliente = clienteDAO.buscarClienteIdDAO(id);
 
         if (cliente == null) {
-            throw new ClienteNoEncontradoException(
-                "No se encontró el cliente con ID: " + id
-            );
+            throw new ClienteNoEncontradoException("No se encontró el cliente con ID: " + id);
         }
 
         return cliente;
     }
 
-    public Cliente actualizarCliente(int id, String nombre, String documento,
-                                    String correo, String telefono)
+    @Override
+    public Cliente actualizarCliente(int id, String nombre, String documento, String correo, String telefono)
             throws ClienteNoEncontradoException, ValidacionException {
 
         Cliente cliente = buscarClienteId(id);
@@ -75,28 +77,27 @@ public class ClienteService {
         return cliente;
     }
 
-    public void eliminarCliente(int id)
-            throws ClienteNoEncontradoException, OperacionNoPermitidaException {
+    @Override
+    public void eliminarCliente(int id) throws ClienteNoEncontradoException, OperacionNoPermitidaException {
 
         buscarClienteId(id);
 
         if (!prestamosCliente(id).isEmpty()) {
             throw new OperacionNoPermitidaException(
-                "No se puede eliminar el cliente porque tiene préstamos asociados"
-            );
+                    "No se puede eliminar el cliente porque tiene préstamos asociados");
         }
 
         clienteDAO.eliminarClienteDAO(id);
     }
 
-    public List<Prestamo> prestamosCliente(int clienteId)
-            throws ClienteNoEncontradoException {
+    @Override
+    public List<Prestamo> prestamosCliente(int clienteId) throws ClienteNoEncontradoException {
 
         buscarClienteId(clienteId);
 
         List<Prestamo> resultado = new ArrayList<>();
 
-        for (Prestamo p : ps.listaPrestamo()) {
+        for (Prestamo p : prestamoService.listaPrestamo()) {
             if (p.getClienteId() == clienteId) {
                 resultado.add(p);
             }
