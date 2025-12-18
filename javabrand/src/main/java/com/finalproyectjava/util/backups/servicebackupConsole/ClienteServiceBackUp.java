@@ -120,5 +120,20 @@ try {
     System.out.println("La fecha está vacía");
 }
 
+
+pagos.stream()
+    .filter(p -> p.getFechaPago()
+        .isAfter(LocalDate.now().minusMonths(1)))
+    .forEach(p -> System.out.println(
+        "Fecha: " + p.getFechaPago() +
+        " Monto: $" + p.getMonto()
+    ));
 }
+
+
+long cantidad = pagos.stream()
+    .filter(p -> p.getFechaPago()
+        .isAfter(LocalDate.now().minusMonths(1)))
+    .count();
+
 */
