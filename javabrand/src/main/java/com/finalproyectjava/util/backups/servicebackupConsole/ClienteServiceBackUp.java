@@ -69,5 +69,56 @@ public class ClienteService {
     return prestamoCliente;
     }
 
+public List<Prestamo> filtrarPrestamosVencidos(List<Prestamo> lista)
+
+lista.stream()
+     .filter(p -> p.getFechaVencimiento().isBefore(LocalDate.now()))
+     .toList();
+
+public List<Prestamo> filtrarPrestamosActivos(List<Prestamo> lista)
+
+public void mostrarResumen(List<Prestamo> lista)
+fecha.isBefore(hoy);   // true si es anterior
+fecha.isAfter(hoy);    // true si es posterior
+fecha.isEqual(hoy);    // true si es igual
+
+
+LocalDateTime ahora = LocalDateTime.now();
+LocalTime hora = LocalTime.now();
+
+Period p = Period.between(fechaInicio, fechaFin);
+
+p.getDays();
+p.getMonths();
+p.getYears();
+
+Period.between(LocalDate.now(), fechaVencimiento).getDays();
+
+LocalDate fecha = LocalDate.now();
+
+fecha = fecha.plusDays(10);
+fecha = fecha.plusMonths(1);
+fecha = fecha.minusYears(2);
+
+if (fechaVencimiento.isBefore(LocalDate.now())) {
+    System.out.println("Préstamo vencido");
+}
+
+List<Prestamo> vencidos = prestamos.stream()
+    .filter(p -> p.getFechaVencimiento().isBefore(LocalDate.now()))
+    .toList();
+
+.filter(p -> "ACTIVO".equals(p.getEstado()))
+
+DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+String fechaTexto = fecha.format(formato);
+
+
+try {
+    LocalDate fecha = rs.getDate("fecha").toLocalDate();
+} catch (NullPointerException e) {
+    System.out.println("La fecha está vacía");
+}
+
 }
 */
